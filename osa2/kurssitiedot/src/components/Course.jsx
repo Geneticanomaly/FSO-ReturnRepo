@@ -22,11 +22,13 @@ const Content = ({course}) => {
 };
 
 const Total = ({course}) => {
+    const sum = course.parts.reduce((prevValue, currentValue) => {
+        return prevValue + currentValue.exercises;
+    }, 0);
+
     return (
         <>
-            <b>
-                Number of exercises {course.parts[0].exercises + course.parts[1].exercises + course.parts[2].exercises}
-            </b>
+            <b>Number of exercises {sum}</b>
         </>
     );
 };
