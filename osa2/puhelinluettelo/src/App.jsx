@@ -11,11 +11,19 @@ const App = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const newPerson = {
-            name: newName,
-        };
-        setPersons(persons.concat(newPerson));
-        setNewName('');
+
+        let sameName = persons.filter((person) => person.name === newName);
+
+        if (sameName.length > 0) {
+            alert(`${newName} is already added to the phonebook`);
+            setNewName('');
+        } else {
+            const newPerson = {
+                name: newName,
+            };
+            setPersons([...persons, newPerson]);
+            setNewName('');
+        }
     };
 
     return (
