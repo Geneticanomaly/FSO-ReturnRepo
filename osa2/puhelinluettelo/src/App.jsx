@@ -24,10 +24,16 @@ const App = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        let sameName = persons.filter((person) => person.name === newName);
+        let sameName = persons.find((person) => person.name === newName);
 
-        if (sameName.length > 0) {
-            alert(`${newName} is already added to the phonebook`);
+        if (sameName) {
+            const newPerson = {...sameName, number: number};
+            console.log(newPerson);
+            if (
+                window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)
+            ) {
+                personService.update(newPerson);
+            }
             setNewName('');
             setNumber('');
         } else {
