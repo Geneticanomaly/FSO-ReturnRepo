@@ -34,8 +34,13 @@ const App = () => {
             const newPerson = {
                 name: newName,
                 number: number,
+                id: (persons.length + 1).toString(),
             };
-            setPersons([...persons, newPerson]);
+
+            axios.post('http://localhost:3001/persons', newPerson).then((res) => {
+                console.log(res.data);
+            });
+
             setNewName('');
             setNumber('');
         }
@@ -48,7 +53,7 @@ const App = () => {
             });
         };
         fetchPersonsData();
-    }, []);
+    }, [persons]);
 
     return (
         <div>
