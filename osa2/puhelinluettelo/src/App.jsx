@@ -3,12 +3,16 @@ import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
 import Persons from './components/Persons';
 import personService from './services/persons';
+import Notification from './components/Notification';
+import './index.css';
 
 const App = () => {
     const [persons, setPersons] = useState([]);
     const [newName, setNewName] = useState('');
     const [number, setNumber] = useState('');
     const [filter, setFilter] = useState('');
+    const [message, setMessage] = useState('');
+    const [action, setAction] = useState('');
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -28,25 +32,26 @@ const App = () => {
 
         if (sameName) {
             const newPerson = {...sameName, number: number};
-            console.log(newPerson);
             if (
                 window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)
             ) {
                 personService.update(newPerson);
+                showMessage('update', newPerson);
             }
             setNewName('');
             setNumber('');
         } else {
+            const maxId = persons.length > 0 ? Math.max(...persons.map((person) => person.id)) : 0;
             const newPerson = {
                 name: newName,
                 number: number,
-                id: (persons.length + 1).toString(),
+                id: (maxId + 1).toString(),
             };
 
             personService.create(newPerson).then((returnedPerson) => {
                 setPersons([...persons, returnedPerson]);
             });
-
+            showMessage('add', newPerson);
             setNewName('');
             setNumber('');
         }
@@ -58,14 +63,32 @@ const App = () => {
         });
     }, [persons]);
 
+    const showMessage = (action, person) => {
+        if (action === 'add') {
+            setMessage(`Added ${person.name}`);
+            setAction('add');
+        } else if (action === 'update') {
+            setMessage(`Updated ${person.name}`);
+            setAction('update');
+        } else {
+            setMessage(`Deleted ${person.name}`);
+            setAction('delete');
+        }
+        setTimeout(() => {
+            setMessage('');
+            setAction('');
+        }, 3000);
+    };
+
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={message} action={action} />
             <Filter handleChange={handleChange} filter={filter} />
             <h2>Add a new</h2>
             <PersonForm handleSubmit={handleSubmit} handleChange={handleChange} newName={newName} number={number} />
             <h2>Numbers</h2>
-            <Persons persons={persons} filter={filter} />
+            <Persons persons={persons} filter={filter} showMessage={showMessage} />
         </div>
     );
 };
