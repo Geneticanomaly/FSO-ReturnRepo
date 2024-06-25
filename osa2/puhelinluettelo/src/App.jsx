@@ -35,7 +35,15 @@ const App = () => {
             if (
                 window.confirm(`${newName} is already added to the phonebook, replace the old number with a new one?`)
             ) {
-                personService.update(newPerson);
+                personService
+                    .update(newPerson)
+                    .then((returnedPerson) => {
+                        setPersons(persons.map((person) => (person.id === newPerson.id ? returnedPerson : person)));
+                    })
+                    .catch((error) => {
+                        showMessage('error', newPerson);
+                        console.error(error);
+                    });
                 showMessage('update', newPerson);
             }
             setNewName('');
@@ -48,9 +56,15 @@ const App = () => {
                 id: (maxId + 1).toString(),
             };
 
-            personService.create(newPerson).then((returnedPerson) => {
-                setPersons([...persons, returnedPerson]);
-            });
+            personService
+                .create(newPerson)
+                .then((returnedPerson) => {
+                    setPersons([...persons, returnedPerson]);
+                })
+                .catch((error) => {
+                    showMessage('error', newPerson);
+                    console.error(error);
+                });
             showMessage('add', newPerson);
             setNewName('');
             setNumber('');
@@ -70,8 +84,11 @@ const App = () => {
         } else if (action === 'update') {
             setMessage(`Updated ${person.name}`);
             setAction('update');
-        } else {
+        } else if (action === 'delete') {
             setMessage(`Deleted ${person.name}`);
+            setAction('delete');
+        } else {
+            setMessage(`Information of ${person.name} has already been removed from server`);
             setAction('delete');
         }
         setTimeout(() => {
@@ -88,7 +105,7 @@ const App = () => {
             <h2>Add a new</h2>
             <PersonForm handleSubmit={handleSubmit} handleChange={handleChange} newName={newName} number={number} />
             <h2>Numbers</h2>
-            <Persons persons={persons} filter={filter} showMessage={showMessage} />
+            <Persons persons={persons} setPersons={setPersons} filter={filter} showMessage={showMessage} />
         </div>
     );
 };
