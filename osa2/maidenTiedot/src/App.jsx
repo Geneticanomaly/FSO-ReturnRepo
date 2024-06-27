@@ -1,6 +1,5 @@
 import {useState, useEffect} from 'react';
 import SearchCountry from './components/SearchCountry';
-import DisplayCountryInfo from './components/DisplayCountryInfo';
 import countryServices from './services/Countries';
 
 function App() {
