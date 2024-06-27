@@ -1,7 +1,24 @@
+import {useEffect, useState} from 'react';
 import '../index.css';
+import weatherServices from '../services/Weather';
+import CityWeather from './CityWeather';
 
 const DisplayCountryInfo = ({filteredCountry}) => {
+    const [weather, setWeather] = useState('');
     const country = filteredCountry[0];
+
+    useEffect(() => {
+        weatherServices
+            .getCityWeather(country.capital[0])
+            .then((returnedWeather) => {
+                setWeather(returnedWeather);
+                console.log(returnedWeather);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }, [country]);
+
     return (
         <div>
             <h1>{country.name.common}</h1>
@@ -14,6 +31,7 @@ const DisplayCountryInfo = ({filteredCountry}) => {
                 ))}
             </ul>
             <img src={country.flags.svg} className="country-flag" />
+            <CityWeather weather={weather} />
         </div>
     );
 };

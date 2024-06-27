@@ -22,6 +22,10 @@ function App() {
             });
     }, []);
 
+    const api_key = import.meta.env.VITE_SOME_KEY;
+
+    console.log('API KEY:', api_key);
+
     return (
         <div>
             <SearchCountry countries={countries} searchFilter={searchFilter} handleChange={handleChange} />
