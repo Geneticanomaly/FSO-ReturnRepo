@@ -31,7 +31,7 @@ const DisplayCountryInfo = ({filteredCountry}) => {
                 ))}
             </ul>
             <img src={country.flags.svg} className="country-flag" />
-            <CityWeather weather={weather} />
+            {weather && <CityWeather weather={weather} />}
         </div>
     );
 };

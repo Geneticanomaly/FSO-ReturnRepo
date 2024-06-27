@@ -1,4 +1,5 @@
 const CityWeather = ({weather}) => {
+    console.log(weather);
     const celsius = Math.ceil((weather.main.temp - 273.15) * 10) / 10;
     return (
         <div>
