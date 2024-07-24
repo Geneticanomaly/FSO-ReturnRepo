@@ -75,7 +75,7 @@ const App = () => {
         personService.getAll().then((initialPersons) => {
             setPersons(initialPersons);
         });
-    }, [persons]);
+    }, []);
 
     const showMessage = (action, person) => {
         if (action === 'add') {
