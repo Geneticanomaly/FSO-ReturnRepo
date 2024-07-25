@@ -41,7 +41,7 @@ const App = () => {
                         setPersons(persons.map((person) => (person.id === newPerson.id ? returnedPerson : person)));
                     })
                     .catch((error) => {
-                        showMessage('error', newPerson, '');
+                        showMessage('validationError', newPerson, error.response.data.error);
                         console.error(error);
                     });
                 showMessage('update', newPerson, '');
@@ -62,7 +62,7 @@ const App = () => {
                     setPersons([...persons, returnedPerson]);
                 })
                 .catch((error) => {
-                    showMessage('incorrectName', newPerson, error.response.data.error);
+                    showMessage('validationError', newPerson, error.response.data.error);
                     console.error(error.response.data.error);
                 });
             showMessage('add', newPerson, '');
@@ -87,7 +87,7 @@ const App = () => {
         } else if (action === 'delete') {
             setMessage(`Deleted ${person.name}`);
             setAction('delete');
-        } else if (action === 'incorrectName') {
+        } else if (action === 'validationError') {
             setMessage(message);
             setAction('delete');
         } else {
