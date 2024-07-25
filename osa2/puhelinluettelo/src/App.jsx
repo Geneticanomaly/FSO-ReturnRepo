@@ -41,10 +41,10 @@ const App = () => {
                         setPersons(persons.map((person) => (person.id === newPerson.id ? returnedPerson : person)));
                     })
                     .catch((error) => {
-                        showMessage('error', newPerson);
+                        showMessage('error', newPerson, '');
                         console.error(error);
                     });
-                showMessage('update', newPerson);
+                showMessage('update', newPerson, '');
             }
             setNewName('');
             setNumber('');
@@ -62,10 +62,10 @@ const App = () => {
                     setPersons([...persons, returnedPerson]);
                 })
                 .catch((error) => {
-                    showMessage('error', newPerson);
-                    console.error(error);
+                    showMessage('incorrectName', newPerson, error.response.data.error);
+                    console.error(error.response.data.error);
                 });
-            showMessage('add', newPerson);
+            showMessage('add', newPerson, '');
             setNewName('');
             setNumber('');
         }
@@ -77,7 +77,7 @@ const App = () => {
         });
     }, []);
 
-    const showMessage = (action, person) => {
+    const showMessage = (action, person, message) => {
         if (action === 'add') {
             setMessage(`Added ${person.name}`);
             setAction('add');
@@ -87,6 +87,9 @@ const App = () => {
         } else if (action === 'delete') {
             setMessage(`Deleted ${person.name}`);
             setAction('delete');
+        } else if (action === 'incorrectName') {
+            setMessage(message);
+            setAction('delete');
         } else {
             setMessage(`Information of ${person.name} has already been removed from server`);
             setAction('delete');
@@ -94,7 +97,7 @@ const App = () => {
         setTimeout(() => {
             setMessage('');
             setAction('');
-        }, 3000);
+        }, 5000);
     };
 
     return (

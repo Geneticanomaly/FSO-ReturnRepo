@@ -10,10 +10,10 @@ const Persons = ({persons, setPersons, filter, showMessage}) => {
                 .deletePerson(id)
                 .then(() => {
                     setPersons(persons.filter((person) => person.id !== id));
-                    showMessage('delete', personToDelete);
+                    showMessage('delete', personToDelete, '');
                 })
                 .catch((error) => {
-                    showMessage('error', personToDelete);
+                    showMessage('error', personToDelete, '');
                     console.error(error);
                 });
         }
