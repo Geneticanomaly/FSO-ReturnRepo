@@ -23,14 +23,14 @@ const mostBlogs = (blogs) => {
         return 0;
     }
 
-    const blogAmount = lodash.countBy(blogs, 'author');
+    const blogAmounts = lodash.countBy(blogs, 'author');
 
     let author = '';
     let mostBlogs = 0;
-    for (const name in blogAmount) {
-        if (blogAmount[name] > mostBlogs) {
+    for (const name in blogAmounts) {
+        if (blogAmounts[name] > mostBlogs) {
             author = name;
-            mostBlogs = blogAmount[name];
+            mostBlogs = blogAmounts[name];
         }
     }
 
@@ -40,9 +40,32 @@ const mostBlogs = (blogs) => {
     };
 };
 
+const mostLikes = (blogs) => {
+    if (blogs.length < 1) {
+        return 0;
+    }
+
+    const likeAmounts = lodash.mapValues(lodash.groupBy(blogs, 'author'), (blogs) => lodash.sumBy(blogs, 'likes'));
+
+    let author = '';
+    let mostLikes = 0;
+    for (const name in likeAmounts) {
+        if (likeAmounts[name] > mostLikes) {
+            mostLikes = likeAmounts[name];
+            author = name;
+        }
+    }
+
+    return {
+        author: author,
+        likes: mostLikes,
+    };
+};
+
 module.exports = {
     dummy,
     totalLikes,
     favoriteBlog,
     mostBlogs,
+    mostLikes,
 };
