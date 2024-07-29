@@ -4,16 +4,19 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const config = require('./utils/config');
 const blogsRouter = require('./controllers/blogs');
+const logger = require('./utils/logger');
 
 mongoose.set('strictQuery', false);
+
+logger.info('connecting to', config.MONGODB_URI);
 
 mongoose
     .connect(config.MONGODB_URI)
     .then((result) => {
-        console.log('connected to MongoDB');
+        logger.info('connected to MongoDB');
     })
     .catch((error) => {
-        console.log('error connecting to MongoDB:', error.message);
+        logger.error('error connecting to MongoDB:', error.message);
     });
 
 app.use(cors());
