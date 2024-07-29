@@ -25,9 +25,18 @@ test('blogs are returned as JSON', async () => {
 });
 
 test.only('there are two blogs in total', async () => {
-    const response = await api.get('/api/blogs');
+    const res = await api.get('/api/blogs');
 
-    assert.strictEqual(response.body.length, 2);
+    assert.strictEqual(res.body.length, 2);
+});
+
+test.only('unique indentifier is called id instead of _id', async () => {
+    const res = await api.get('/api/blogs');
+    const blogs = res.body;
+
+    blogs.forEach((blog) => {
+        assert(blog.hasOwnProperty('id'));
+    });
 });
 
 after(async () => {
