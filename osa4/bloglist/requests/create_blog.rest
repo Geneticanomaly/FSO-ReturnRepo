@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
     "title": "Writer",
-    "author": "Arto Hellas", 
-    "url": "test.com",
-    "likes": 5
+    "author": "Mary Poppendick", 
+    "url": "testTesting.com",
+    "likes": 7
 }
