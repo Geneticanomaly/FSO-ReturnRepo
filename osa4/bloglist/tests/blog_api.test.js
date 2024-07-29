@@ -39,6 +39,27 @@ test.only('unique indentifier is called id instead of _id', async () => {
     });
 });
 
+test.only('a valid blog can be added', async () => {
+    const newBlog = {
+        title: 'Writer',
+        author: 'Grace Hollow',
+        url: 'justsomerandomurl.com',
+        likes: 8,
+    };
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
+    const res = await api.get('/api/blogs');
+
+    const author = res.body.map((e) => e.author);
+
+    assert.strictEqual(res.body.length, helper.initialBlogs.length + 1);
+    assert(author.includes('Grace Hollow'));
+});
+
 after(async () => {
     await mongoose.connection.close();
 });
