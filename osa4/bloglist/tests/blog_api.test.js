@@ -60,6 +60,25 @@ test.only('a valid blog can be added', async () => {
     assert(author.includes('Grace Hollow'));
 });
 
+test.only('likes equals 0 when none are given in a new POST request', async () => {
+    const newBlog = {
+        title: 'Writer',
+        author: 'Theo Primer',
+        url: 'idkwhaturlnameisgood.com',
+    };
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
+    const res = await api.get('/api/blogs');
+    const lastBlog = res.body[res.body.length - 1];
+
+    assert.strictEqual(lastBlog.likes, 0);
+});
+
 after(async () => {
     await mongoose.connection.close();
 });

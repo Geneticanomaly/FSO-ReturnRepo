@@ -7,11 +7,12 @@ blogsRouter.get('/', async (req, res) => {
 });
 
 blogsRouter.post('/', async (req, res) => {
+    const likeAmount = req.body.likes ? req.body.likes : 0;
     const blog = new Blog({
         title: req.body.title,
         author: req.body.author,
         url: req.body.url,
-        likes: req.body.likes,
+        likes: likeAmount,
     });
 
     const savedBlog = await blog.save();

@@ -3,7 +3,6 @@ Content-Type: application/json
 
 {
     "title": "Writer",
-    "author": "Mary Poppendick", 
-    "url": "testTesting.com",
-    "likes": 7
+    "author": "Walter White", 
+    "url": "arandomurl.com"
 }
