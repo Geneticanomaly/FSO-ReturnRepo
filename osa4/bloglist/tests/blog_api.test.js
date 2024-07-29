@@ -79,6 +79,23 @@ test.only('likes equals 0 when none are given in a new POST request', async () =
     assert.strictEqual(lastBlog.likes, 0);
 });
 
+test.only('if title or url is missing respond with a statuscode 400', async () => {
+    let newBlog = {
+        author: 'Theo Primer',
+        url: 'idkwhaturlnameisgood.com',
+    };
+
+    await api.post('/api/blogs').send(newBlog).expect(400);
+
+    newBlog = {
+        title: 'Writer',
+        author: 'Theo Primer',
+        likes: 19,
+    };
+
+    await api.post('/api/blogs').send(newBlog).expect(400);
+});
+
 after(async () => {
     await mongoose.connection.close();
 });
