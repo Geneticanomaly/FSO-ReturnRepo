@@ -35,7 +35,22 @@ blogsRouter.delete('/:id', async (req, res) => {
         return res.status(404).json({error: 'no such blog found'});
     }
 
-    res.status(204).end();
+    res.status(204).json(deletedBlog);
+});
+
+blogsRouter.put('/:id', async (req, res) => {
+    const id = req.params.id;
+    const updatedData = {
+        likes: req.body.likes,
+    };
+
+    const updatedBlog = await Blog.findByIdAndUpdate(id, updatedData);
+
+    if (!updatedBlog) {
+        return res.status(404).json({error: 'no such blog found'});
+    }
+
+    res.status(204).json(updatedBlog);
 });
 
 module.exports = blogsRouter;
