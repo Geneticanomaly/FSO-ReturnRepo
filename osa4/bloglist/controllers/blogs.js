@@ -50,7 +50,7 @@ blogsRouter.put('/:id', async (req, res) => {
         return res.status(404).json({error: 'no such blog found'});
     }
 
-    res.status(204).json(updatedBlog);
+    res.status(200).json(updatedBlog);
 });
 
 module.exports = blogsRouter;

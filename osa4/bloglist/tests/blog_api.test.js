@@ -120,7 +120,7 @@ describe('updating blog', () => {
             likes: 7,
         };
 
-        await api.put(`/api/blogs/${blogToUpdate.id}`).send(newLikes).expect(204);
+        await api.put(`/api/blogs/${blogToUpdate.id}`).send(newLikes).expect(200);
 
         const blogsAtEnd = await helper.blogsInDb();
 
