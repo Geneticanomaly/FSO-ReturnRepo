@@ -109,6 +109,12 @@ describe('blog deletion', () => {
 
         assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1);
     });
+
+    test('deleting a blog with invalid id, return statuscode 400', async () => {
+        const invalidId = '5aa3sdajkkjh4421dsda3';
+
+        await api.delete(`/api/blogs/${invalidId}`).expect(400);
+    });
 });
 
 describe('updating blog', () => {
@@ -125,6 +131,16 @@ describe('updating blog', () => {
         const blogsAtEnd = await helper.blogsInDb();
 
         assert.notStrictEqual(blogsAtStart[0].likes, blogsAtEnd[0].likes);
+    });
+
+    test('updating log with invalid id, return statuscode 400', async () => {
+        const invalidId = '5aa3sdajkkjh4421dsda3';
+
+        const newLikes = {
+            likes: 7,
+        };
+
+        await api.put(`/api/blogs/${invalidId}`).send(newLikes).expect(400);
     });
 });
 
