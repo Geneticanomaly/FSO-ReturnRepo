@@ -96,6 +96,17 @@ test.only('if title or url is missing respond with a statuscode 400', async () =
     await api.post('/api/blogs').send(newBlog).expect(400);
 });
 
+test.only('deleting a blog works, respond with a statuscode 204', async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToDelete = blogsAtStart[0];
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+    const blogsAtEnd = await helper.blogsInDb();
+
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1);
+});
+
 after(async () => {
     await mongoose.connection.close();
 });
