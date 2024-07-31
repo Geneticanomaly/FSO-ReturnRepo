@@ -1,16 +1,21 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRhbm55IiwiaWQiOiI2NmFhNjFmNmFjZWIwNmNkNzE5ZmNiZmMiLCJpYXQiOjE3MjI0NDMxNjJ9.GaYUQq2Png5yv1sAmRsOccAFP5lN87rsb545UKrWNnA
 
 # {
 #     "title": "Things I Don't Know as of 2018",
 #     "author": "Dan Abramov", 
-#     "url": "https://overreacted.io/things-i-dont-know-as-of-2018/",
-#     "userId": "66a92269401f5bc5ad03cf65"
+#     "url": "https://overreacted.io/things-i-dont-know-as-of-2018/"
 # }
 
-{ 
-    "title": "You Don't Know What You Don't Know",
-    "author": "Arto Hellas",
-    "url": "https://www.forbes.com/sites/brucekasanoff/2018/03/21/you-dont-know-wh…",
-    "userId": "66a92269401f5bc5ad03cf68"
+# { 
+#     "title": "You Don't Know What You Don't Know",
+#     "author": "Arto Hellas",
+#     "url": "https://www.forbes.com/sites/brucekasanoff/2018/03/21/you-dont-know-wh…"
+# }
+
+{
+    "title": "The Two Reacts",
+    "author": "Danny Abramov",
+    "url": "https://overreacted.io/the-two-reacts/"
 }
