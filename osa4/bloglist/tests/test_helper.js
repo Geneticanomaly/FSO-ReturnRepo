@@ -3,15 +3,15 @@ const User = require('../models/user');
 
 const initialBlogs = [
     {
-        title: 'Writer',
-        author: 'Arto Hellas',
-        url: 'test.com',
+        title: "Things I Don't Know as of 2018",
+        author: 'Dan Abramov',
+        url: 'https://overreacted.io/things-i-dont-know-as-of-2018/',
         likes: 5,
     },
     {
-        title: 'Writer',
-        author: 'Dan Abramov',
-        url: 'something.something.com',
+        title: "You Don't Know What You Don't Know",
+        author: 'Arto Hellas',
+        url: 'https://www.forbes.com/sites/brucekasanoff/2018/03/21/you-dont-know-wh…',
         likes: 12,
     },
 ];

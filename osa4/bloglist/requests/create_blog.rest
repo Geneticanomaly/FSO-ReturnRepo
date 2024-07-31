@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjZhYTZkMTBjMWFmZDg5OTFmMDI1NTk4IiwiaWF0IjoxNzIyNDQ1MjU5LCJleHAiOjE3MjI0NDg4NTl9.Oao2KNRc2J9kzcdY0Zkzie2JcpJnTl9p04gCyJjfE2Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjZhYTcxMzJkZDM1NzcwMDgxY2YxYjlmIiwiaWF0IjoxNzIyNDQ2MTc5LCJleHAiOjE3MjI0NDk3Nzl9.zirZMR6e2LHYd40x0bKrn29JDci75UiSJD9M1PALsEA
 
 {
     "title": "Things I Don't Know as of 2018",
