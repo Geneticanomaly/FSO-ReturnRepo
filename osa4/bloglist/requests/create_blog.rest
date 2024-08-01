@@ -1,12 +1,11 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjZhYTcxMzJkZDM1NzcwMDgxY2YxYjlmIiwiaWF0IjoxNzIyNDQ2MTc5LCJleHAiOjE3MjI0NDk3Nzl9.zirZMR6e2LHYd40x0bKrn29JDci75UiSJD9M1PALsEA
-
-{
-    "title": "Things I Don't Know as of 2018",
-    "author": "Dan Abramov", 
-    "url": "https://overreacted.io/things-i-dont-know-as-of-2018/"
-}
+Authorization: Bearer 
+# {
+#     "title": "Things I Don't Know as of 2018",
+#     "author": "Dan Abramov", 
+#     "url": "https://overreacted.io/things-i-dont-know-as-of-2018/"
+# }
 
 # { 
 #     "title": "You Don't Know What You Don't Know",
@@ -14,8 +13,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imhlb
 #     "url": "https://www.forbes.com/sites/brucekasanoff/2018/03/21/you-dont-know-wh…"
 # }
 
-# {
-#     "title": "The Two Reacts",
-#     "author": "Danny Abramov",
-#     "url": "https://overreacted.io/the-two-reacts/"
-# }
+{
+    "title": "The Two Reacts",
+    "author": "Danny Abramov",
+    "url": "https://overreacted.io/the-two-reacts/"
+}
