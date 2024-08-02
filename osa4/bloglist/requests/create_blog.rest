@@ -10,7 +10,7 @@ Authorization: Bearer
 # { 
 #     "title": "You Don't Know What You Don't Know",
 #     "author": "Arto Hellas",
-#     "url": "https://www.forbes.com/sites/brucekasanoff/2018/03/21/you-dont-know-wh…"
+#     "url": "https://www.forbes.com/sites/forbestechcouncil/2022/07/28/you-dont-know-what-you-dont-know-or-do-you/"
 # }
 
 {

@@ -4,17 +4,22 @@ const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../app');
 const api = supertest(app);
-const Blog = require('../models/blog');
+
 const helper = require('./test_helper');
 
+const loginUser = async () => {
+    const userCredentials = {
+        username: 'danny',
+        password: '1234567',
+    };
+
+    const loginResponse = await api.post('/api/login').send(userCredentials);
+
+    return loginResponse.body.token;
+};
+
 beforeEach(async () => {
-    await Blog.deleteMany({});
-
-    let blogObject = new Blog(helper.initialBlogs[0]);
-    await blogObject.save();
-
-    blogObject = new Blog(helper.initialBlogs[1]);
-    await blogObject.save();
+    await helper.initializeDb();
 });
 
 test('blogs are returned as JSON', async () => {
@@ -41,14 +46,17 @@ test('unique indentifier is called id instead of _id', async () => {
 
 describe('blog addition (POST)', () => {
     test('a valid blog can be added', async () => {
+        const token = await loginUser();
+
         const newBlog = {
-            title: 'Writer',
-            author: 'Grace Hollow',
-            url: 'justsomerandomurl.com',
+            title: 'The Two Reacts',
+            author: 'Danny Abramov',
+            url: 'https://overreacted.io/the-two-reacts/',
             likes: 8,
         };
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/);
@@ -58,18 +66,21 @@ describe('blog addition (POST)', () => {
         const author = res.body.map((e) => e.author);
 
         assert.strictEqual(res.body.length, helper.initialBlogs.length + 1);
-        assert(author.includes('Grace Hollow'));
+        assert(author.includes('Arto Hellas'));
     });
 
     test('likes equals 0 when none are given in a new POST request', async () => {
+        const token = await loginUser();
+
         const newBlog = {
-            title: 'Writer',
-            author: 'Theo Primer',
-            url: 'idkwhaturlnameisgood.com',
+            title: "You Don't Know What You Don't Know",
+            author: 'Arto Hellas',
+            url: 'https://www.forbes.com/sites/forbestechcouncil/2022/07/28/you-dont-know-what-you-dont-know-or-do-you/',
         };
 
         await api
             .post('/api/blogs')
+            .set('Authorization', `Bearer ${token}`)
             .send(newBlog)
             .expect(201)
             .expect('Content-Type', /application\/json/);
@@ -81,12 +92,14 @@ describe('blog addition (POST)', () => {
     });
 
     test('if title or url is missing respond with a statuscode 400', async () => {
+        const token = await loginUser();
+
         let newBlog = {
             author: 'Theo Primer',
             url: 'idkwhaturlnameisgood.com',
         };
 
-        await api.post('/api/blogs').send(newBlog).expect(400);
+        await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(newBlog).expect(400);
 
         newBlog = {
             title: 'Writer',
@@ -94,26 +107,50 @@ describe('blog addition (POST)', () => {
             likes: 19,
         };
 
-        await api.post('/api/blogs').send(newBlog).expect(400);
+        await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(newBlog).expect(400);
     });
 });
 
 describe('blog deletion', () => {
     test('deleting a blog works, respond with a statuscode 204', async () => {
         const blogsAtStart = await helper.blogsInDb();
-        const blogToDelete = blogsAtStart[0];
+        const blogToDelete = blogsAtStart[1];
 
-        await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+        const token = await loginUser();
+
+        await api.delete(`/api/blogs/${blogToDelete.id}`).set('Authorization', `Bearer ${token}`).expect(204);
 
         const blogsAtEnd = await helper.blogsInDb();
 
         assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1);
     });
 
+    test('deleting a blog that does not belong to user', async () => {
+        const blogsAtStart = await helper.blogsInDb();
+        const blogToDelete = blogsAtStart[0];
+
+        const token = await loginUser();
+
+        await api.delete(`/api/blogs/${blogToDelete.id}`).set('Authorization', `Bearer ${token}`).expect(403);
+    });
+
     test('deleting a blog with invalid id, return statuscode 400', async () => {
         const invalidId = '5aa3sdajkkjh4421dsda3';
 
-        await api.delete(`/api/blogs/${invalidId}`).expect(400);
+        const token = await loginUser();
+
+        await api.delete(`/api/blogs/${invalidId}`).set('Authorization', `Bearer ${token}`).expect(400);
+    });
+
+    test('deleting blog without token, return statuscode 401', async () => {
+        const blogsAtStart = await helper.blogsInDb();
+        const blogToDelete = blogsAtStart[0];
+
+        await api.delete(`/api/blogs/${blogToDelete.id}`).expect(401);
+
+        const blogsAtEnd = await helper.blogsInDb();
+
+        assert.strictEqual(blogsAtStart.length, blogsAtEnd.length);
     });
 });
 
