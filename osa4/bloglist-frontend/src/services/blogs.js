@@ -6,9 +6,4 @@ const getAll = async () => {
     return request.data;
 };
 
-const loginUser = async (credentials) => {
-    const req = await axios.post('/api/login', credentials);
-    return req.data;
-};
-
-export default {getAll, loginUser};
+export default {getAll};
