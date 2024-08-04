@@ -17,6 +17,11 @@ const App = () => {
             const blogs = await blogService.getAll();
             setBlogs(blogs);
         };
+        const loggedUserJSON = window.localStorage.getItem('loggedInUser');
+        if (loggedUserJSON) {
+            const user = JSON.parse(loggedUserJSON);
+            setUser(user);
+        }
         fetchBlogs();
     }, []);
 
@@ -32,6 +37,7 @@ const App = () => {
         try {
             const user = await loginService.loginUser(formData);
             setUser(user);
+            window.localStorage.setItem('loggedInUser', JSON.stringify(user));
             setFormData(() => ({
                 username: '',
                 password: '',
@@ -45,11 +51,9 @@ const App = () => {
     };
 
     const handleLogOut = () => {
+        window.localStorage.clear();
         setUser(null);
     };
-
-    console.log(user);
-    console.log(formData);
 
     return (
         <div>
