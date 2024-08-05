@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import loginService from '../services/login';
 
-const Login = ({setUser, setErrorMessage}) => {
+const Login = ({setUser, showMessage}) => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -27,15 +27,11 @@ const Login = ({setUser, setErrorMessage}) => {
             }));
         } catch (e) {
             console.log(e);
-            setErrorMessage(e.response.data.error);
-            setTimeout(() => {
-                setErrorMessage(null);
-            }, 5000);
+            showMessage(e, 'error');
         }
     };
     return (
         <div>
-            <h2>Log in to application</h2>
             <form onSubmit={handleLogin}>
                 username
                 <input

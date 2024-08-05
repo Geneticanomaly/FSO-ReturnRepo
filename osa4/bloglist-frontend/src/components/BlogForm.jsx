@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import blogService from '../services/blogs';
 
-const BlogForm = ({user, setBlogs}) => {
+const BlogForm = ({user, setBlogs, showMessage}) => {
     const [formData, setFormData] = useState({
         title: '',
         author: '',
@@ -19,10 +19,15 @@ const BlogForm = ({user, setBlogs}) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        blogService.setToken(user.token);
-        const blog = await blogService.create(formData);
-        console.log(blog);
-        setBlogs((prevBlogs) => [...prevBlogs, blog]);
+        try {
+            blogService.setToken(user.token);
+            const blog = await blogService.create(formData);
+            console.log(blog);
+            setBlogs((prevBlogs) => [...prevBlogs, blog]);
+            showMessage(blog, 'add');
+        } catch (e) {
+            showMessage(e, 'error');
+        }
     };
 
     return (
