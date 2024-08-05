@@ -20,11 +20,6 @@
     color: red;
 }
 
-.blog-content {
-    display: flex;
-    flex-direction: column;
-}
-
 .blog-content p {
     margin: 0;
 }

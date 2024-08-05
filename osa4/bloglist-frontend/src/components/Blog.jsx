@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import '../index.css';
 
-const Blog = ({blog}) => {
+const Blog = ({blog, updateBlog}) => {
     const [isVisible, setVisible] = useState(false);
 
     const blogStyle = {
@@ -12,10 +12,16 @@ const Blog = ({blog}) => {
         marginBottom: 5,
     };
 
-    console.log(blog);
-
     const handleClick = () => {
         setVisible(!isVisible);
+    };
+
+    const handleLikeClick = (blog) => {
+        const newLikes = {
+            likes: blog.likes + 1,
+        };
+
+        updateBlog(blog.id, newLikes);
     };
 
     return (
@@ -27,7 +33,8 @@ const Blog = ({blog}) => {
                     <div className="blog-content">
                         <p>{blog.url}</p>
                         <div className="blog-likes">
-                            <p>likes {blog.likes}</p> <button>like</button>
+                            <p>likes {blog.likes}</p>{' '}
+                            <button onClick={() => handleLikeClick(blog)}>like</button>
                         </div>
                         <p>{blog.user.name}</p>
                     </div>

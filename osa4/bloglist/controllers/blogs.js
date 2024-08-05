@@ -45,11 +45,12 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (req, res) => {
 
 blogsRouter.put('/:id', async (req, res) => {
     const id = req.params.id;
+    console.log(req.body);
     const updatedData = {
         likes: req.body.likes,
     };
 
-    const updatedBlog = await Blog.findByIdAndUpdate(id, updatedData);
+    const updatedBlog = await Blog.findByIdAndUpdate(id, updatedData, {new: true});
 
     if (!updatedBlog) {
         return res.status(404).json({error: 'no such blog found'});

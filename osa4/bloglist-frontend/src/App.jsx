@@ -47,13 +47,27 @@ const App = () => {
         }
     };
 
+    const updateBlog = async (id, likes) => {
+        try {
+            const updatedBlog = await blogService.update(id, likes);
+            setBlogs((prevBlogs) =>
+                prevBlogs.map((blog) => (blog.id !== id ? blog : {...blog, likes: updatedBlog.likes}))
+            );
+            showMessage(updatedBlog, 'update');
+        } catch (e) {
+            showMessage(e, 'error');
+        }
+    };
+
     const showMessage = (content, type) => {
         if (type === 'error') {
-            console.log(content);
             setMessage(content.response.data.error);
             setAction(type);
         } else if (type === 'add') {
             setMessage(`a new blog ${content.title} by ${content.author} added`);
+            setAction(type);
+        } else if (type === 'update') {
+            setMessage(`updated blog ${content.title} likes`);
             setAction(type);
         }
         setTimeout(() => {
@@ -81,7 +95,7 @@ const App = () => {
                         <BlogForm createBlog={createBlog} />
                     </Togglable>
                     {blogs.map((blog) => (
-                        <Blog key={blog.id} blog={blog} />
+                        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
                     ))}
                 </div>
             )}
