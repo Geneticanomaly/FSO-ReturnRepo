@@ -1,7 +1,6 @@
 import {useState} from 'react';
-import blogService from '../services/blogs';
 
-const BlogForm = ({user, setBlogs, showMessage}) => {
+const BlogForm = ({createBlog}) => {
     const [formData, setFormData] = useState({
         title: '',
         author: '',
@@ -18,26 +17,22 @@ const BlogForm = ({user, setBlogs, showMessage}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        try {
-            blogService.setToken(user.token);
-            const blog = await blogService.create(formData);
-            console.log(blog);
-            setBlogs((prevBlogs) => [...prevBlogs, blog]);
-            showMessage(blog, 'add');
-        } catch (e) {
-            showMessage(e, 'error');
-        }
+        createBlog(formData);
+        setFormData({
+            title: '',
+            author: '',
+            url: '',
+        });
     };
 
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                title: <input type="text" name="title" onChange={handleChange} />
+                title: <input type="text" name="title" value={formData.title} onChange={handleChange} />
                 <br />
-                author: <input type="text" name="author" onChange={handleChange} />
+                author: <input type="text" name="author" value={formData.author} onChange={handleChange} />
                 <br />
-                url: <input type="text" name="url" onChange={handleChange} />
+                url: <input type="text" name="url" value={formData.url} onChange={handleChange} />
                 <br />
                 <input type="submit" defaultValue="Create" />
             </form>

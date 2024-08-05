@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import loginService from '../services/login';
 
-const Login = ({setUser, showMessage}) => {
+const LoginForm = ({setUser, showMessage}) => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -34,22 +34,10 @@ const Login = ({setUser, showMessage}) => {
         <div>
             <form onSubmit={handleLogin}>
                 username
-                <input
-                    name="username"
-                    type="text"
-                    value={formData.username}
-                    onChange={handleChange}
-                    required={true}
-                />
+                <input name="username" type="text" value={formData.username} onChange={handleChange} />
                 <br />
                 password
-                <input
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required={true}
-                />
+                <input name="password" type="password" value={formData.password} onChange={handleChange} />
                 <br />
                 <input type="Submit" defaultValue="login" />
             </form>
@@ -57,4 +45,4 @@ const Login = ({setUser, showMessage}) => {
     );
 };
 
-export default Login;
+export default LoginForm;
