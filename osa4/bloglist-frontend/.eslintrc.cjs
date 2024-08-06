@@ -1,6 +1,6 @@
 module.exports = {
     root: true,
-    env: { browser: true, es2020: true },
+    env: { browser: true, es2020: true, 'vitest-globals/env': true },
     extends: [
         'eslint:recommended',
         'plugin:react/recommended',
@@ -15,7 +15,6 @@ module.exports = {
         'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
         'react/prop-types': 0,
         indent: ['error', 4],
-        quotes: ['error', 'single'],
         eqeqeq: 'error',
         semi: ['error', 'always'],
         'no-trailing-spaces': 'error',
