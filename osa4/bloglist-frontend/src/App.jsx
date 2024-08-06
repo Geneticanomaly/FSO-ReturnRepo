@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import LoginForm from './components/LoginForm';
@@ -39,7 +39,6 @@ const App = () => {
             blogFormRef.current.toggleVisibility();
             blogService.setToken(user.token);
             const blog = await blogService.create(formData);
-            console.log(blog);
             setBlogs((prevBlogs) => [...prevBlogs, blog]);
             showMessage(blog, 'add');
         } catch (e) {
@@ -51,7 +50,7 @@ const App = () => {
         try {
             const updatedBlog = await blogService.update(id, likes);
             setBlogs((prevBlogs) =>
-                prevBlogs.map((blog) => (blog.id !== id ? blog : {...blog, likes: updatedBlog.likes}))
+                prevBlogs.map((blog) => (blog.id !== id ? blog : { ...blog, likes: updatedBlog.likes }))
             );
             showMessage(updatedBlog, 'update');
         } catch (e) {
@@ -63,9 +62,7 @@ const App = () => {
         try {
             blogService.setToken(user.token);
             await blogService.deleteBlog(id);
-            // console.log('HUH', deletedBlog);
             setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== id));
-            // showMessage(deletedBlog, 'delete');
         } catch (e) {
             showMessage(e, 'error');
         }
@@ -80,10 +77,6 @@ const App = () => {
             setAction(type);
         } else if (type === 'update') {
             setMessage(`updated blog ${content.title} likes`);
-            setAction(type);
-        } else if (type === 'delete') {
-            console.log('DELETED', content);
-            setMessage(`deleted blog ${content.title}`);
             setAction(type);
         }
         setTimeout(() => {

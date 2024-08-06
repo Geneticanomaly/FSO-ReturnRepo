@@ -1,7 +1,7 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import loginService from '../services/login';
 
-const LoginForm = ({setUser, showMessage}) => {
+const LoginForm = ({ setUser, showMessage }) => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -26,7 +26,6 @@ const LoginForm = ({setUser, showMessage}) => {
                 password: '',
             }));
         } catch (e) {
-            console.log(e);
             showMessage(e, 'error');
         }
     };
