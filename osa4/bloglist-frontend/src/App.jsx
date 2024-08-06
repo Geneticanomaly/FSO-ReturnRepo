@@ -59,6 +59,18 @@ const App = () => {
         }
     };
 
+    const deleteBlog = async (id) => {
+        try {
+            blogService.setToken(user.token);
+            await blogService.deleteBlog(id);
+            // console.log('HUH', deletedBlog);
+            setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== id));
+            // showMessage(deletedBlog, 'delete');
+        } catch (e) {
+            showMessage(e, 'error');
+        }
+    };
+
     const showMessage = (content, type) => {
         if (type === 'error') {
             setMessage(content.response.data.error);
@@ -68,6 +80,10 @@ const App = () => {
             setAction(type);
         } else if (type === 'update') {
             setMessage(`updated blog ${content.title} likes`);
+            setAction(type);
+        } else if (type === 'delete') {
+            console.log('DELETED', content);
+            setMessage(`deleted blog ${content.title}`);
             setAction(type);
         }
         setTimeout(() => {
@@ -97,7 +113,13 @@ const App = () => {
                     {blogs
                         .sort((a, b) => b.likes - a.likes)
                         .map((blog) => (
-                            <Blog key={blog.id} blog={blog} updateBlog={updateBlog} />
+                            <Blog
+                                key={blog.id}
+                                blog={blog}
+                                updateBlog={updateBlog}
+                                deleteBlog={deleteBlog}
+                                user={user}
+                            />
                         ))}
                 </div>
             )}
