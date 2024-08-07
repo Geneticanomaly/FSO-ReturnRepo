@@ -28,13 +28,28 @@ const BlogForm = ({ createBlog }) => {
     return (
         <div>
             <form onSubmit={handleSubmit}>
-                title: <input type="text" name="title" value={formData.title} onChange={handleChange} />
+                title:{' '}
+                <input
+                    id="blog-title"
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleChange}
+                />
                 <br />
-                author: <input type="text" name="author" value={formData.author} onChange={handleChange} />
+                author:{' '}
+                <input
+                    id="blog-author"
+                    type="text"
+                    name="author"
+                    value={formData.author}
+                    onChange={handleChange}
+                />
                 <br />
-                url: <input type="text" name="url" value={formData.url} onChange={handleChange} />
+                url:{' '}
+                <input id="blog-url" type="text" name="url" value={formData.url} onChange={handleChange} />
                 <br />
-                <input type="submit" defaultValue="Create" />
+                <input id="blog-create" type="submit" value="create" />
             </form>
         </div>
     );

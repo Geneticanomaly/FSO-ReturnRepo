@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Blog from './Blog';
+import Blog from '../components/Blog';
+import BlogForm from '../components/BlogForm';
 
 const user = {
     token: '',
@@ -64,4 +65,26 @@ test('like button calls a function when pressed', async () => {
     await event.click(likeButton);
 
     expect(mockHandler.mock.calls).toHaveLength(2);
+});
+
+test('<BlogForm /> updates parent state and calls onSubmit', async () => {
+    const event = userEvent.setup();
+    const createBlog = vi.fn();
+
+    const { container } = render(<BlogForm createBlog={createBlog} />);
+
+    const inputTitle = container.querySelector('#blog-title');
+    const inputAuthor = container.querySelector('#blog-author');
+    const inputUrl = container.querySelector('#blog-url');
+    const inputSubmit = container.querySelector('#blog-create');
+
+    await event.type(inputTitle, 'My new title!');
+    await event.type(inputAuthor, 'Dan Abramov');
+    await event.type(inputUrl, 'testurl.com');
+    await event.click(inputSubmit);
+
+    expect(createBlog.mock.calls).toHaveLength(1);
+    expect(createBlog.mock.calls[0][0].title).toBe('My new title!');
+    expect(createBlog.mock.calls[0][0].author).toBe('Dan Abramov');
+    expect(createBlog.mock.calls[0][0].url).toBe('testurl.com');
 });
