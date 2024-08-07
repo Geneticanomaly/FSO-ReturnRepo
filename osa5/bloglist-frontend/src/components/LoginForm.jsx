@@ -45,7 +45,7 @@ const LoginForm = ({ setUser, showMessage }) => {
     );
 };
 
-LoginForm.PropTypes = {
+LoginForm.propTypes = {
     setUser: PropTypes.func.isRequired,
     showMessage: PropTypes.func.isRequired,
 };
