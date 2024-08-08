@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Blog from '../components/Blog';
-import BlogForm from '../components/BlogForm';
+import Blog from '../src/components/Blog';
+import BlogForm from '../src/components/BlogForm';
 
 const user = {
     token: '',
