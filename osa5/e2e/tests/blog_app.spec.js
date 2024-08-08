@@ -1,8 +1,9 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test');
+const { loginWith, createBlog } = require('./helper');
 
 describe('Blog app', () => {
     beforeEach(async ({ page, request }) => {
-        await page.goto('http://localhost:5173/');
+        await request.post('http://localhost:3003/api/testing/reset');
         await request.post('http://localhost:3003/api/users', {
             data: {
                 name: 'Matti Luukkainen',
@@ -10,6 +11,7 @@ describe('Blog app', () => {
                 password: 'salainen',
             },
         });
+        await page.goto('http://localhost:5173/');
     });
 
     test('Login form is displayed', async ({ page, request }) => {
@@ -28,18 +30,37 @@ describe('Blog app', () => {
 
     describe('Login', () => {
         test('succeeds with correct credentials', async ({ page }) => {
-            await page.getByRole('textbox').first().fill('mluukkai');
-            await page.getByRole('textbox').last().fill('salainen');
-            await page.getByRole('button', { name: 'login' }).click();
+            await loginWith(page, 'mluukkai', 'salainen');
 
             await expect(page.getByText('Matti Luukkainen logged in')).toBeVisible();
         });
         test('fails with wrong credentials', async ({ page }) => {
-            await page.getByRole('textbox').first().fill('dannylee');
-            await page.getByRole('textbox').last().fill('wrong');
-            await page.getByRole('button', { name: 'login' }).click();
+            await loginWith(page, 'dannylee', 'wrong');
 
             await expect(page.getByText('invalid username or password')).toBeVisible();
+            await expect(page.getByText('Matti Luukkainen logged in')).not.toBeVisible();
+        });
+
+        describe('when logged in', () => {
+            beforeEach(async ({ page }) => {
+                await loginWith(page, 'mluukkai', 'salainen');
+            });
+            test('a new blog can be created', async ({ page }) => {
+                await page.getByRole('button', { name: 'new blog' }).click();
+
+                const textboxes = await page.getByRole('textbox').all();
+
+                await createBlog(
+                    page,
+                    textboxes,
+                    'a blog created by playwright',
+                    'playwright',
+                    'https://playwright.dev/'
+                );
+
+                const titleDiv = page.locator('.blog-title');
+                await expect(titleDiv).toContainText('a blog created by playwright');
+            });
         });
     });
 });
