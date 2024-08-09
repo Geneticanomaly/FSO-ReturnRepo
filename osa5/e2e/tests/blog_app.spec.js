@@ -80,6 +80,29 @@ describe('Blog app', () => {
                 await page.getByRole('button', { name: 'like' }).click();
                 await expect(blogLikes).toContainText('likes 1');
             });
+            test('a blog can be deleted', async ({ page }) => {
+                await page.getByRole('button', { name: 'new blog' }).click();
+
+                const textboxes = await page.getByRole('textbox').all();
+
+                await createBlog(
+                    page,
+                    textboxes,
+                    'a blog created by playwright',
+                    'playwright',
+                    'https://playwright.dev/'
+                );
+
+                await page.getByRole('button', { name: 'view' }).click();
+
+                const titleDiv = page.locator('.blog-title');
+                await expect(titleDiv).toBeVisible();
+
+                page.on('dialog', async (dialog) => await dialog.accept());
+                await page.getByRole('button', { name: 'remove' }).click();
+
+                await expect(titleDiv).not.toBeVisible();
+            });
         });
     });
 });
