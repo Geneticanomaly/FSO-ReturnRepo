@@ -61,6 +61,25 @@ describe('Blog app', () => {
                 const titleDiv = page.locator('.blog-title');
                 await expect(titleDiv).toContainText('a blog created by playwright');
             });
+            test('a blog can be liked', async ({ page }) => {
+                await page.getByRole('button', { name: 'new blog' }).click();
+
+                const textboxes = await page.getByRole('textbox').all();
+
+                await createBlog(
+                    page,
+                    textboxes,
+                    'a blog created by playwright',
+                    'playwright',
+                    'https://playwright.dev/'
+                );
+
+                await page.getByRole('button', { name: 'view' }).click();
+                const blogLikes = page.locator('.blog-likes p');
+                await expect(blogLikes).toContainText('likes 0');
+                await page.getByRole('button', { name: 'like' }).click();
+                await expect(blogLikes).toContainText('likes 1');
+            });
         });
     });
 });
