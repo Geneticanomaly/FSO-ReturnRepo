@@ -1,20 +1,14 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test');
-const { loginWith, createBlog } = require('./helper');
+const { loginWith, createBlog, addUser } = require('./helper');
 
 describe('Blog app', () => {
     beforeEach(async ({ page, request }) => {
         await request.post('http://localhost:3003/api/testing/reset');
-        await request.post('http://localhost:3003/api/users', {
-            data: {
-                name: 'Matti Luukkainen',
-                username: 'mluukkai',
-                password: 'salainen',
-            },
-        });
+        await addUser(request, 'Matti Luukkainen', 'mluukkai', 'salainen');
         await page.goto('http://localhost:5173/');
     });
 
-    test('Login form is displayed', async ({ page, request }) => {
+    test('Login form is displayed', async ({ page }) => {
         const header = page.getByText('Login to application');
         await expect(header).toBeVisible();
 
@@ -102,6 +96,29 @@ describe('Blog app', () => {
                 await page.getByRole('button', { name: 'remove' }).click();
 
                 await expect(titleDiv).not.toBeVisible();
+            });
+            test('the creator of a blog only sees the remove button', async ({ page, request }) => {
+                await page.getByRole('button', { name: 'new blog' }).click();
+
+                const textboxes = await page.getByRole('textbox').all();
+
+                await createBlog(
+                    page,
+                    textboxes,
+                    'a blog created by playwright',
+                    'playwright',
+                    'https://playwright.dev/'
+                );
+
+                await page.getByRole('button', { name: 'view' }).click();
+                await expect(page.getByRole('button', { name: 'remove' })).toBeVisible();
+                await page.getByRole('button', { name: 'Logout' }).click();
+
+                await addUser(request, 'Arto Hellas', 'hellas', 'salainen');
+                await loginWith(page, 'hellas', 'salainen');
+
+                await page.getByRole('button', { name: 'view' }).click();
+                await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible();
             });
         });
     });
