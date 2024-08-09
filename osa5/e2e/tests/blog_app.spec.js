@@ -120,6 +120,35 @@ describe('Blog app', () => {
                 await page.getByRole('button', { name: 'view' }).click();
                 await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible();
             });
+            test('blogs are arranged by their likes', async ({ page }) => {
+                await page.getByRole('button', { name: 'new blog' }).click();
+
+                const textboxes = await page.getByRole('textbox').all();
+
+                await createBlog(page, textboxes, 'first one', 'playwright', 'https://playwright.dev/');
+
+                const firstBlog = page.locator('.blog-title', { hasText: 'first one' });
+                await expect(firstBlog).toBeVisible();
+
+                await page.getByRole('button', { name: 'new blog' }).click();
+
+                await createBlog(page, textboxes, 'second blog', 'playwright', 'https://playwright.dev/');
+
+                const secondBlog = page.locator('.blog-title', { hasText: 'second blog' });
+                await expect(secondBlog).toBeVisible();
+
+                const blogList = page.locator('.blog-list');
+                await expect(blogList.locator('.blog-title').first()).toContainText('first one');
+
+                await secondBlog.locator('button', { name: 'view' }).click();
+                await secondBlog.getByRole('button', { name: 'like' }).click();
+                await expect(secondBlog.locator('.blog-likes p')).toContainText('likes 1');
+
+                await firstBlog.locator('button', { name: 'view' }).click();
+                await expect(firstBlog.locator('.blog-likes p')).toContainText('likes 0');
+
+                await expect(blogList.locator('.blog-title').first()).toContainText('second blog');
+            });
         });
     });
 });
