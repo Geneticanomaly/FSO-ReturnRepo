@@ -1,32 +1,21 @@
-import { useRef } from 'react';
 import { voteAnecdote } from '../reducers/anecdoteReducer';
-import { showNotification, clearNotification } from '../reducers/notificationReducer';
+import { setNotification } from '../reducers/notificationReducer';
 import { useSelector, useDispatch } from 'react-redux';
 
-const AnecdoteList = () => {
+const AnecdoteList = ({ notificationRef }) => {
     const anecdotes = useSelector((state) => {
         if (state.filter === 'ALL') {
             return state.anecdotes;
         }
-
         return state.anecdotes.filter((anecdote) =>
             anecdote.content.toLowerCase().includes(state.filter.toLowerCase())
         );
     });
     const dispatch = useDispatch();
-    const notificationRef = useRef(null);
 
     const vote = (id, anecdote) => {
         dispatch(voteAnecdote(id, anecdote));
-        dispatch(showNotification(anecdote.content));
-
-        if (notificationRef.current) {
-            clearTimeout(notificationRef.current);
-        }
-
-        notificationRef.current = setTimeout(() => {
-            dispatch(clearNotification());
-        }, 5000);
+        dispatch(setNotification(`You voted: '${anecdote.content}'`, 5, notificationRef));
     };
     console.log(anecdotes);
     return (
