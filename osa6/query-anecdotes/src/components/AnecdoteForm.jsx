@@ -18,6 +18,16 @@ const AnecdoteForm = () => {
                 dispatch({ type: 'HIDE' });
             }, 5000);
         },
+        onError: (error) => {
+            dispatch({
+                type: 'SHOW',
+                payload: error.response.data.error,
+            });
+
+            setTimeout(() => {
+                dispatch({ type: 'HIDE' });
+            }, 5000);
+        },
     });
 
     const onCreate = (event) => {
