@@ -50,7 +50,9 @@ const App = () => {
         try {
             const updatedBlog = await blogService.update(id, likes);
             setBlogs((prevBlogs) =>
-                prevBlogs.map((blog) => (blog.id !== id ? blog : { ...blog, likes: updatedBlog.likes }))
+                prevBlogs.map((blog) =>
+                    blog.id !== id ? blog : { ...blog, likes: updatedBlog.likes },
+                ),
             );
             showMessage(updatedBlog, 'update');
         } catch (e) {
