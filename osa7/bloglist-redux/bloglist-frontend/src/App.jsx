@@ -6,6 +6,8 @@ import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import './index.css';
 import Togglable from './components/Togglable';
+import { useDispatch } from 'react-redux';
+import { setNotification } from './reducers/notificationReducer';
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
@@ -13,7 +15,9 @@ const App = () => {
     const [message, setMessage] = useState('');
     const [action, setAction] = useState('');
 
+    const notificationRef = useRef(null);
     const blogFormRef = useRef();
+    const dispatch = useDispatch();
 
     const fetchBlogs = async () => {
         const blogs = await blogService.getAll();
@@ -40,9 +44,15 @@ const App = () => {
             blogService.setToken(user.token);
             const blog = await blogService.create(formData);
             setBlogs((prevBlogs) => [...prevBlogs, blog]);
-            showMessage(blog, 'add');
+            dispatch(
+                setNotification(
+                    `a new blog ${blog.title} by ${blog.author} added`,
+                    5,
+                    notificationRef,
+                ),
+            );
         } catch (e) {
-            showMessage(e, 'error');
+            dispatch(setNotification(e.response.data.error, 5, notificationRef));
         }
     };
 
@@ -54,9 +64,12 @@ const App = () => {
                     blog.id !== id ? blog : { ...blog, likes: updatedBlog.likes },
                 ),
             );
-            showMessage(updatedBlog, 'update');
+            dispatchEvent;
+            dispatch(
+                setNotification(`updated blog ${updatedBlog.title} likes`, 5, notificationRef),
+            );
         } catch (e) {
-            showMessage(e, 'error');
+            dispatch(setNotification(e.response.data.error));
         }
     };
 
@@ -66,7 +79,7 @@ const App = () => {
             await blogService.deleteBlog(id);
             setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== id));
         } catch (e) {
-            showMessage(e, 'error');
+            dispatch(setNotification(e.response.data.error));
         }
     };
 
@@ -92,13 +105,13 @@ const App = () => {
             {!user ? (
                 <div>
                     <h2>Login to application</h2>
-                    {message && <Notification message={message} action={action} />}
-                    <LoginForm setUser={setUser} showMessage={showMessage} />
+                    <Notification />
+                    <LoginForm setUser={setUser} notificationRef={notificationRef} />
                 </div>
             ) : (
                 <div>
                     <h2>blogs</h2>
-                    {message && <Notification message={message} action={action} />}
+                    <Notification />
                     <p>
                         {user.name} logged in <button onClick={handleLogOut}>Logout</button>
                     </p>
