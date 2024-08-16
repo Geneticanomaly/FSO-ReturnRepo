@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import loginService from '../services/login';
-import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { setNotification } from '../reducers/notificationReducer';
+import { login } from '../reducers/userReducer';
 
-const LoginForm = ({ setUser, notificationRef }) => {
+const LoginForm = ({ notificationRef }) => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -23,8 +22,7 @@ const LoginForm = ({ setUser, notificationRef }) => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const user = await loginService.loginUser(formData);
-            setUser(user);
+            const user = await dispatch(login(formData));
             window.localStorage.setItem('loggedInUser', JSON.stringify(user));
             setFormData(() => ({
                 username: '',
@@ -38,29 +36,15 @@ const LoginForm = ({ setUser, notificationRef }) => {
         <div>
             <form onSubmit={handleLogin}>
                 username
-                <input
-                    name="username"
-                    type="text"
-                    value={formData.username}
-                    onChange={handleChange}
-                />
+                <input name="username" type="text" value={formData.username} onChange={handleChange} />
                 <br />
                 password
-                <input
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                />
+                <input name="password" type="password" value={formData.password} onChange={handleChange} />
                 <br />
                 <input type="Submit" defaultValue="login" />
             </form>
         </div>
     );
-};
-
-LoginForm.propTypes = {
-    setUser: PropTypes.func.isRequired,
 };
 
 export default LoginForm;

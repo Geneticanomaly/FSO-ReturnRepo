@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setNotification } from './reducers/notificationReducer';
 import { initializeBlogs } from './reducers/blogReducer';
-import blogService from './services/blogs';
+import { setUser, logout } from './reducers/userReducer';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
@@ -11,7 +10,9 @@ import Togglable from './components/Togglable';
 import './index.css';
 
 const App = () => {
-    const [user, setUser] = useState(null);
+    const user = useSelector((state) => {
+        return state.user;
+    });
 
     const notificationRef = useRef(null);
     const blogFormRef = useRef();
@@ -21,7 +22,7 @@ const App = () => {
         const loggedUserJSON = window.localStorage.getItem('loggedInUser');
         if (loggedUserJSON) {
             const user = JSON.parse(loggedUserJSON);
-            setUser(user);
+            dispatch(setUser(user));
         }
 
         dispatch(initializeBlogs());
@@ -29,7 +30,7 @@ const App = () => {
 
     const handleLogOut = () => {
         window.localStorage.clear();
-        setUser(null);
+        dispatch(logout());
     };
 
     return (
@@ -38,7 +39,7 @@ const App = () => {
                 <div>
                     <h2>Login to application</h2>
                     <Notification />
-                    <LoginForm setUser={setUser} notificationRef={notificationRef} />
+                    <LoginForm notificationRef={notificationRef} />
                 </div>
             ) : (
                 <div>

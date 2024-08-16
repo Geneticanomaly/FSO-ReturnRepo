@@ -27,7 +27,6 @@ export const { appendBlog, modifyBlog, removeBlog, setBlogs } = blogSlice.action
 export const initializeBlogs = () => {
     return async (dispatch) => {
         const blogs = await blogService.getAll();
-        console.log('HERE', blogs);
         dispatch(setBlogs(blogs));
     };
 };
