@@ -1,11 +1,17 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { createBlog } from '../reducers/blogReducer';
+import { setNotification } from '../reducers/notificationReducer';
+import blogService from '../services/blogs';
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = ({ user, blogFormRef, notificationRef }) => {
     const [formData, setFormData] = useState({
         title: '',
         author: '',
         url: '',
     });
+
+    const dispatch = useDispatch();
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -17,7 +23,21 @@ const BlogForm = ({ createBlog }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        createBlog(formData);
+        try {
+            blogFormRef.current.toggleVisibility();
+            blogService.setToken(user.token);
+            await dispatch(createBlog(formData));
+            dispatch(
+                setNotification(
+                    `a new blog ${formData.title} by ${formData.author} added`,
+                    5,
+                    notificationRef,
+                ),
+            );
+        } catch (e) {
+            dispatch(setNotification(e.response.data.error, 5, notificationRef));
+        }
+
         setFormData({
             title: '',
             author: '',

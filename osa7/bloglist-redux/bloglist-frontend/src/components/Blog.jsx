@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import '../index.css';
+import { useDispatch } from 'react-redux';
+import { voteBlog, deleteBlog } from '../reducers/blogReducer';
+import { setNotification } from '../reducers/notificationReducer';
+import blogService from '../services/blogs';
 
-const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
+const Blog = ({ blog, user, notificationRef }) => {
     const [isVisible, setVisible] = useState(false);
+    const dispatch = useDispatch();
 
     const blogStyle = {
         paddingTop: 10,
@@ -21,12 +26,20 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
             likes: blog.likes + 1,
         };
 
-        updateBlog(blog.id, newLikes);
+        dispatch(voteBlog(blog.id, newLikes));
+        dispatch(setNotification(`updated blog ${blog.title} likes`, 5, notificationRef));
     };
 
-    const handleDelete = (blog) => {
+    const handleDelete = async (blog) => {
         if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-            deleteBlog(blog.id);
+            try {
+                blogService.setToken(user.token);
+                await dispatch(deleteBlog(blog.id));
+                dispatch(setNotification(`deleted blog ${blog.title}`, 5, notificationRef));
+            } catch (e) {
+                console.log('ERROR', e);
+                dispatch(setNotification(e.response.data.error));
+            }
         }
     };
 
