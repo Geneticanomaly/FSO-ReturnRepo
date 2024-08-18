@@ -1,5 +1,4 @@
 import { createContext, useContext, useReducer } from 'react';
-import loginService from '../services/login';
 
 const userReducer = (state, action) => {
     switch (action.type) {
@@ -17,7 +16,7 @@ const UserContext = createContext();
 export const UserContextProvider = (props) => {
     const [user, userDispatch] = useReducer(userReducer, '');
 
-    return <UserContextProvider value={[user, userDispatch]}>{props.children}</UserContextProvider>;
+    return <UserContext.Provider value={[user, userDispatch]}>{props.children}</UserContext.Provider>;
 };
 
 export const useUserValue = () => {
@@ -28,15 +27,6 @@ export const useUserValue = () => {
 export const useUserDispatch = () => {
     const userAndDispatch = useContext(UserContext);
     return userAndDispatch[1];
-};
-
-export const setNewUser = async (dispatch, credentials) => {
-    const user = await loginService.loginUser(credentials);
-    dispatch({ type: 'SET', payload: user });
-};
-
-export const clearUser = (dispatch) => {
-    dispatch({ type: 'CLEAR' });
 };
 
 export default userReducer;

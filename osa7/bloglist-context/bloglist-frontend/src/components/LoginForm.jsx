@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import loginService from '../services/login';
 import { setNotification, useNotificationDispatch } from '../context/NotificationContext';
+import { useUserDispatch } from '../context/UserContext';
 
-const LoginForm = ({ setUser, notificationRef }) => {
+const LoginForm = ({ notificationRef }) => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
     });
     const dispatch = useNotificationDispatch();
+    const userDispatch = useUserDispatch();
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -21,7 +23,8 @@ const LoginForm = ({ setUser, notificationRef }) => {
         e.preventDefault();
         try {
             const user = await loginService.loginUser(formData);
-            setUser(user);
+            userDispatch({ type: 'SET', payload: user });
+            // setUser(user);
             window.localStorage.setItem('loggedInUser', JSON.stringify(user));
             setFormData(() => ({
                 username: '',

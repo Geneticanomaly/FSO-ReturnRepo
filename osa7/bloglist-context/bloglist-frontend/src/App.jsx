@@ -1,31 +1,31 @@
-import { useState, useEffect, useRef } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
-import './index.css';
 import blogService from './services/blogs';
+import { useUserDispatch, useUserValue } from './context/UserContext';
+import './index.css';
 
 const App = () => {
-    const [user, setUser] = useState(null);
-    const queryClient = useQueryClient();
-
     const blogFormRef = useRef();
     const notificationRef = useRef(null);
+    const userDispatch = useUserDispatch();
+    const user = useUserValue();
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedInUser');
         if (loggedUserJSON) {
             const user = JSON.parse(loggedUserJSON);
-            setUser(user);
+            userDispatch({ type: 'SET', payload: user });
         }
     }, []);
 
     const handleLogOut = () => {
         window.localStorage.clear();
-        setUser(null);
+        userDispatch({ type: 'CLEAR' });
     };
 
     const result = useQuery({
@@ -51,7 +51,7 @@ const App = () => {
                 <div>
                     <h2>Login to application</h2>
                     <Notification />
-                    <LoginForm setUser={setUser} notificationRef={notificationRef} />
+                    <LoginForm notificationRef={notificationRef} />
                 </div>
             ) : (
                 <div>
