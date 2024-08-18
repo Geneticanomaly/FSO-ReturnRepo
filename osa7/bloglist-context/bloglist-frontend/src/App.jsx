@@ -7,6 +7,7 @@ import Notification from './components/Notification';
 import './index.css';
 import Togglable from './components/Togglable';
 import { setNotification, useNotificationDispatch } from './context/NotificationContext';
+import { initializeBlogs, useBlogDispatch, useBlogValue } from './context/BlogContext';
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
@@ -15,11 +16,8 @@ const App = () => {
     const blogFormRef = useRef();
     const notificationRef = useRef(null);
     const dispatch = useNotificationDispatch();
-
-    const fetchBlogs = async () => {
-        const blogs = await blogService.getAll();
-        setBlogs(blogs);
-    };
+    const blogDispatch = useBlogDispatch();
+    const newBlogs = useBlogValue();
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedInUser');
@@ -27,29 +25,12 @@ const App = () => {
             const user = JSON.parse(loggedUserJSON);
             setUser(user);
         }
-        fetchBlogs();
+        initializeBlogs(blogDispatch);
     }, []);
 
     const handleLogOut = () => {
         window.localStorage.clear();
         setUser(null);
-    };
-
-    const createBlog = async (formData) => {
-        try {
-            blogFormRef.current.toggleVisibility();
-            blogService.setToken(user.token);
-            const blog = await blogService.create(formData);
-            setBlogs((prevBlogs) => [...prevBlogs, blog]);
-            setNotification(
-                dispatch,
-                `a new blog ${formData.title} by ${formData.author} added`,
-                5,
-                notificationRef
-            );
-        } catch (e) {
-            setNotification(dispatch, e.response.data.error, 5, notificationRef);
-        }
     };
 
     const updateBlog = async (id, likes) => {
@@ -90,10 +71,10 @@ const App = () => {
                         {user.name} logged in <button onClick={handleLogOut}>Logout</button>
                     </p>
                     <Togglable buttonLabel="new blog" ref={blogFormRef}>
-                        <BlogForm createBlog={createBlog} />
+                        <BlogForm user={user} blogFormRef={blogFormRef} notificationRef={notificationRef} />
                     </Togglable>
                     <div className="blog-list">
-                        {blogs
+                        {[...newBlogs]
                             .sort((a, b) => b.likes - a.likes)
                             .map((blog) => (
                                 <Blog

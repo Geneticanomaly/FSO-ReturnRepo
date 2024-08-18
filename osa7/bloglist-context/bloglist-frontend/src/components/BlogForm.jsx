@@ -1,11 +1,16 @@
 import { useState } from 'react';
+import { useBlogDispatch, createBlog } from '../context/BlogContext';
+import { useNotificationDispatch, setNotification } from '../context/NotificationContext';
+import blogService from '../services/blogs';
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = ({ user, blogFormRef, notificationRef }) => {
     const [formData, setFormData] = useState({
         title: '',
         author: '',
         url: '',
     });
+    const dispatch = useNotificationDispatch();
+    const blogDispatch = useBlogDispatch();
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -17,7 +22,20 @@ const BlogForm = ({ createBlog }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        createBlog(formData);
+        try {
+            blogFormRef.current.toggleVisibility();
+            blogService.setToken(user.token);
+            createBlog(blogDispatch, formData);
+            setNotification(
+                dispatch,
+                `a new blog ${formData.title} by ${formData.author} added`,
+                5,
+                notificationRef
+            );
+        } catch (e) {
+            console.log('ERROR', e);
+            setNotification(dispatch, e.response.data.error, 5, notificationRef);
+        }
         setFormData({
             title: '',
             author: '',
