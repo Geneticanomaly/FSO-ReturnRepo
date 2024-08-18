@@ -1,13 +1,22 @@
+import { useNotificationValue } from '../context/NotificationContext';
 import '../index.css';
-import PropTypes from 'prop-types';
 
-const Notification = ({ message, action }) => {
-    return <div className={`message ${action}`}>{message}</div>;
-};
+const Notification = () => {
+    const notification = useNotificationValue();
 
-Notification.propTypes = {
-    message: PropTypes.string.isRequired,
-    action: PropTypes.string.isRequired,
+    const getNotificationStyle = (notification) => {
+        if (notification.includes('added')) {
+            return 'message add';
+        } else if (notification.includes('updated')) {
+            return 'message update';
+        } else {
+            return 'message error';
+        }
+    };
+
+    const notificationStyle = getNotificationStyle(notification);
+
+    return <>{notification && <div className={notificationStyle}>{notification}</div>}</>;
 };
 
 export default Notification;

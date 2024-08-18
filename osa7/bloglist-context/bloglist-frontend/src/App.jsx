@@ -6,14 +6,15 @@ import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
 import './index.css';
 import Togglable from './components/Togglable';
+import { setNotification, useNotificationDispatch } from './context/NotificationContext';
 
 const App = () => {
     const [blogs, setBlogs] = useState([]);
     const [user, setUser] = useState(null);
-    const [message, setMessage] = useState('');
-    const [action, setAction] = useState('');
 
     const blogFormRef = useRef();
+    const notificationRef = useRef(null);
+    const dispatch = useNotificationDispatch();
 
     const fetchBlogs = async () => {
         const blogs = await blogService.getAll();
@@ -40,9 +41,14 @@ const App = () => {
             blogService.setToken(user.token);
             const blog = await blogService.create(formData);
             setBlogs((prevBlogs) => [...prevBlogs, blog]);
-            showMessage(blog, 'add');
+            setNotification(
+                dispatch,
+                `a new blog ${formData.title} by ${formData.author} added`,
+                5,
+                notificationRef
+            );
         } catch (e) {
-            showMessage(e, 'error');
+            setNotification(dispatch, e.response.data.error, 5, notificationRef);
         }
     };
 
@@ -52,9 +58,9 @@ const App = () => {
             setBlogs((prevBlogs) =>
                 prevBlogs.map((blog) => (blog.id !== id ? blog : { ...blog, likes: updatedBlog.likes }))
             );
-            showMessage(updatedBlog, 'update');
+            setNotification(dispatch, `updated blog ${updatedBlog.title} likes`, 5, notificationRef);
         } catch (e) {
-            showMessage(e, 'error');
+            setNotification(dispatch, e.response.data.error, 5, notificationRef);
         }
     };
 
@@ -64,25 +70,8 @@ const App = () => {
             await blogService.deleteBlog(id);
             setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog.id !== id));
         } catch (e) {
-            showMessage(e, 'error');
+            setNotification(dispatch, e.response.data.error, 5, notificationRef);
         }
-    };
-
-    const showMessage = (content, type) => {
-        if (type === 'error') {
-            setMessage(content.response.data.error);
-            setAction(type);
-        } else if (type === 'add') {
-            setMessage(`a new blog ${content.title} by ${content.author} added`);
-            setAction(type);
-        } else if (type === 'update') {
-            setMessage(`updated blog ${content.title} likes`);
-            setAction(type);
-        }
-        setTimeout(() => {
-            setMessage('');
-            setAction('');
-        }, 5000);
     };
 
     return (
@@ -90,13 +79,13 @@ const App = () => {
             {!user ? (
                 <div>
                     <h2>Login to application</h2>
-                    {message && <Notification message={message} action={action} />}
-                    <LoginForm setUser={setUser} showMessage={showMessage} />
+                    <Notification />
+                    <LoginForm setUser={setUser} notificationRef={notificationRef} />
                 </div>
             ) : (
                 <div>
                     <h2>blogs</h2>
-                    {message && <Notification message={message} action={action} />}
+                    <Notification />
                     <p>
                         {user.name} logged in <button onClick={handleLogOut}>Logout</button>
                     </p>

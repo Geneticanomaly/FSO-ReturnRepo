@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import loginService from '../services/login';
-import PropTypes from 'prop-types';
+import { setNotification, useNotificationDispatch } from '../context/NotificationContext';
 
-const LoginForm = ({ setUser, showMessage }) => {
+const LoginForm = ({ setUser, notificationRef }) => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
     });
+    const dispatch = useNotificationDispatch();
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -27,7 +28,7 @@ const LoginForm = ({ setUser, showMessage }) => {
                 password: '',
             }));
         } catch (e) {
-            showMessage(e, 'error');
+            setNotification(dispatch, e.response.data.error, 5, notificationRef);
         }
     };
     return (
@@ -43,11 +44,6 @@ const LoginForm = ({ setUser, showMessage }) => {
             </form>
         </div>
     );
-};
-
-LoginForm.propTypes = {
-    setUser: PropTypes.func.isRequired,
-    showMessage: PropTypes.func.isRequired,
 };
 
 export default LoginForm;
