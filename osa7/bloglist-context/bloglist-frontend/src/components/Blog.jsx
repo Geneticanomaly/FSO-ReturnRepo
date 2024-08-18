@@ -1,13 +1,13 @@
 import { useState } from 'react';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import '../index.css';
-import { deleteBlog, useBlogDispatch, updateBlog } from '../context/BlogContext';
 import { useNotificationDispatch, setNotification } from '../context/NotificationContext';
 import blogService from '../services/blogs';
 
 const Blog = ({ blog, user, notificationRef }) => {
+    const queryClient = useQueryClient();
     const [isVisible, setVisible] = useState(false);
     const dispatch = useNotificationDispatch();
-    const blogDispatch = useBlogDispatch();
 
     const blogStyle = {
         paddingTop: 10,
@@ -17,32 +17,43 @@ const Blog = ({ blog, user, notificationRef }) => {
         marginBottom: 5,
     };
 
+    const updateBlogMutation = useMutation({
+        mutationFn: blogService.update,
+        onSuccess: (newBlog) => {
+            const blogs = queryClient.getQueryData(['blogs']);
+            const updatedBlogs = blogs.map((blog) => (newBlog.id !== blog.id ? blog : newBlog));
+            queryClient.setQueryData(['blogs'], updatedBlogs);
+            setNotification(dispatch, `updated blog ${blog.title} likes`, 5, notificationRef);
+        },
+        onError: (e) => {
+            setNotification(dispatch, e.response.data.error, 5, notificationRef);
+        },
+    });
+
+    const deleteBlogMutation = useMutation({
+        mutationFn: blogService.deleteBlog,
+        onSuccess: (deletedBlog) => {
+            const blogs = queryClient.getQueryData(['blogs']);
+            const updatedBlogs = blogs.filter((blog) => deletedBlog.id !== blog.id);
+            queryClient.setQueryData(['blogs'], updatedBlogs);
+        },
+        onError: (e) => {
+            setNotification(dispatch, e.response.data.error, 5, notificationRef);
+        },
+    });
+
     const handleClick = () => {
         setVisible(!isVisible);
     };
 
     const handleLikeClick = (blog) => {
-        const newLikes = {
-            likes: blog.likes + 1,
-        };
-
-        try {
-            updateBlog(blogDispatch, blog.id, newLikes);
-            setNotification(dispatch, `updated blog ${blog.title} likes`, 5, notificationRef);
-        } catch (e) {
-            console.log('ERROR', e);
-            setNotification(dispatch, e.response.data.error, 5, notificationRef);
-        }
+        updateBlogMutation.mutate(blog);
     };
 
     const handleDelete = (blog) => {
         if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-            try {
-                blogService.setToken(user.token);
-                deleteBlog(blogDispatch, blog.id);
-            } catch (e) {
-                setNotification(dispatch, e.response.data.error, 5, notificationRef);
-            }
+            blogService.setToken(user.token);
+            deleteBlogMutation.mutate(blog.id);
         }
     };
 

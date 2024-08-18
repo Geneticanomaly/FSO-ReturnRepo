@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useBlogDispatch, createBlog } from '../context/BlogContext';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
 import { useNotificationDispatch, setNotification } from '../context/NotificationContext';
 import blogService from '../services/blogs';
 
@@ -9,8 +9,25 @@ const BlogForm = ({ user, blogFormRef, notificationRef }) => {
         author: '',
         url: '',
     });
+    const queryClient = useQueryClient();
     const dispatch = useNotificationDispatch();
-    const blogDispatch = useBlogDispatch();
+
+    const blogMutation = useMutation({
+        mutationFn: blogService.create,
+        onSuccess: (newBlog) => {
+            const blogs = queryClient.getQueryData(['blogs']);
+            queryClient.setQueryData(['blogs'], [...blogs, newBlog]);
+            setNotification(
+                dispatch,
+                `a new blog ${formData.title} by ${formData.author} added`,
+                5,
+                notificationRef
+            );
+        },
+        onError: (e) => {
+            setNotification(dispatch, e.response.data.error, 5, notificationRef);
+        },
+    });
 
     const handleChange = (e) => {
         e.preventDefault();
@@ -22,20 +39,9 @@ const BlogForm = ({ user, blogFormRef, notificationRef }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            blogFormRef.current.toggleVisibility();
-            blogService.setToken(user.token);
-            createBlog(blogDispatch, formData);
-            setNotification(
-                dispatch,
-                `a new blog ${formData.title} by ${formData.author} added`,
-                5,
-                notificationRef
-            );
-        } catch (e) {
-            console.log('ERROR', e);
-            setNotification(dispatch, e.response.data.error, 5, notificationRef);
-        }
+        blogFormRef.current.toggleVisibility();
+        blogService.setToken(user.token);
+        blogMutation.mutate(formData);
         setFormData({
             title: '',
             author: '',

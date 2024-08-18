@@ -1,19 +1,19 @@
 import { useState, useEffect, useRef } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
 import BlogForm from './components/BlogForm';
 import Notification from './components/Notification';
-import './index.css';
 import Togglable from './components/Togglable';
-import { initializeBlogs, useBlogDispatch, useBlogValue } from './context/BlogContext';
+import './index.css';
+import blogService from './services/blogs';
 
 const App = () => {
     const [user, setUser] = useState(null);
+    const queryClient = useQueryClient();
 
     const blogFormRef = useRef();
     const notificationRef = useRef(null);
-    const blogDispatch = useBlogDispatch();
-    const blogs = useBlogValue();
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedInUser');
@@ -21,13 +21,29 @@ const App = () => {
             const user = JSON.parse(loggedUserJSON);
             setUser(user);
         }
-        initializeBlogs(blogDispatch);
     }, []);
 
     const handleLogOut = () => {
         window.localStorage.clear();
         setUser(null);
     };
+
+    const result = useQuery({
+        queryKey: ['blogs'],
+        queryFn: () => blogService.getAll(),
+        retry: 1,
+        refetchOnWindowFocus: false,
+    });
+
+    if (result.isLoading) {
+        return <div>Loading data...</div>;
+    }
+
+    if (result.isError) {
+        return <div>Blog service is not available due to problems in server</div>;
+    }
+
+    const blogs = result.data;
 
     return (
         <div>
