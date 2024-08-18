@@ -1,8 +1,13 @@
 import { useState } from 'react';
 import '../index.css';
+import { deleteBlog, useBlogDispatch, updateBlog } from '../context/BlogContext';
+import { useNotificationDispatch, setNotification } from '../context/NotificationContext';
+import blogService from '../services/blogs';
 
-const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
+const Blog = ({ blog, user, notificationRef }) => {
     const [isVisible, setVisible] = useState(false);
+    const dispatch = useNotificationDispatch();
+    const blogDispatch = useBlogDispatch();
 
     const blogStyle = {
         paddingTop: 10,
@@ -21,12 +26,23 @@ const Blog = ({ blog, updateBlog, deleteBlog, user }) => {
             likes: blog.likes + 1,
         };
 
-        updateBlog(blog.id, newLikes);
+        try {
+            updateBlog(blogDispatch, blog.id, newLikes);
+            setNotification(dispatch, `updated blog ${blog.title} likes`, 5, notificationRef);
+        } catch (e) {
+            console.log('ERROR', e);
+            setNotification(dispatch, e.response.data.error, 5, notificationRef);
+        }
     };
 
     const handleDelete = (blog) => {
         if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-            deleteBlog(blog.id);
+            try {
+                blogService.setToken(user.token);
+                deleteBlog(blogDispatch, blog.id);
+            } catch (e) {
+                setNotification(dispatch, e.response.data.error, 5, notificationRef);
+            }
         }
     };
 
