@@ -7,6 +7,7 @@ import UserPage from './pages/UserPage';
 import './index.css';
 import BlogPage from './pages/BlogPage';
 import LoginPage from './pages/LoginPage';
+import UserView from './components/UserView';
 
 const App = () => {
     const user = useSelector((state) => {
@@ -49,6 +50,9 @@ const App = () => {
             )}
             <Routes>
                 <Route path="/users" element={<UserPage user={user} />} />
+            </Routes>
+            <Routes>
+                <Route path="/users/:id" element={<UserView />} />
             </Routes>
         </Router>
     );
