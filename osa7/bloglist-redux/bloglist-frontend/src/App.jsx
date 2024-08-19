@@ -8,6 +8,7 @@ import './index.css';
 import BlogPage from './pages/BlogPage';
 import LoginPage from './pages/LoginPage';
 import UserView from './components/UserView';
+import BlogView from './components/BlogView';
 
 const App = () => {
     const user = useSelector((state) => {
@@ -53,6 +54,9 @@ const App = () => {
             </Routes>
             <Routes>
                 <Route path="/users/:id" element={<UserView />} />
+            </Routes>
+            <Routes>
+                <Route path="/blogs/:id" element={<BlogView notificationRef={notificationRef} />} />
             </Routes>
         </Router>
     );

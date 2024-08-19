@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import '../index.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { voteBlog, deleteBlog } from '../reducers/blogReducer';
 import { setNotification } from '../reducers/notificationReducer';
 import blogService from '../services/blogs';
+import { Link } from 'react-router-dom';
 
-const Blog = ({ blog, user, notificationRef }) => {
+const Blog = ({ blog, notificationRef }) => {
+    const user = useSelector((state) => {
+        return state.user;
+    });
     const [isVisible, setVisible] = useState(false);
     const dispatch = useDispatch();
 
@@ -46,7 +50,9 @@ const Blog = ({ blog, user, notificationRef }) => {
     return (
         <div style={blogStyle}>
             <div className="blog-title">
-                {blog.title} {blog.author}
+                <Link to={`/blogs/${blog.id}`}>
+                    {blog.title} {blog.author}
+                </Link>
                 <button onClick={handleClick}>{!isVisible ? 'view' : 'hide'}</button>
                 {isVisible && (
                     <div className="blog-content">

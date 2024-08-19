@@ -7,6 +7,17 @@ blogsRouter.get('/', async (req, res) => {
     res.json(blogs);
 });
 
+blogsRouter.get('/:id', async (req, res) => {
+    const id = req.params.id;
+    const blog = await Blog.findById(id).populate('user', { username: 1, name: 1 });
+
+    if (!blog) {
+        return res.status(400).json({ error: 'No such blog found!' });
+    }
+
+    return res.status(200).json(blog);
+});
+
 blogsRouter.post('/', middleware.userExtractor, async (req, res) => {
     const likeAmount = req.body.likes ? req.body.likes : 0;
 

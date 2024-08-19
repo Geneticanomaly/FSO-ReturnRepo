@@ -11,7 +11,7 @@ const BlogPage = ({ user, blogFormRef, notificationRef }) => {
             <Togglable buttonLabel="new blog" ref={blogFormRef}>
                 <BlogForm user={user} blogFormRef={blogFormRef} notificationRef={notificationRef} />
             </Togglable>
-            <BlogList user={user} notificationRef={notificationRef} />
+            <BlogList notificationRef={notificationRef} />
         </div>
     );
 };

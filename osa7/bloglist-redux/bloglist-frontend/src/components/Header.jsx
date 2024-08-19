@@ -14,7 +14,6 @@ const Header = () => {
         window.localStorage.clear();
         dispatch(logout());
     };
-    console.log(user);
 
     return (
         <div>
