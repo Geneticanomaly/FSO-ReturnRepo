@@ -1,13 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { initializeBlogs } from './reducers/blogReducer';
 import { setUser, logout } from './reducers/userReducer';
-import LoginForm from './components/LoginForm';
-import BlogForm from './components/BlogForm';
-import Notification from './components/Notification';
-import BlogList from './components/BlogList';
-import Togglable from './components/Togglable';
+import UserPage from './pages/UserPage';
 import './index.css';
+import BlogPage from './pages/BlogPage';
+import LoginPage from './pages/LoginPage';
 
 const App = () => {
     const user = useSelector((state) => {
@@ -28,33 +27,30 @@ const App = () => {
         dispatch(initializeBlogs());
     }, []);
 
-    const handleLogOut = () => {
-        window.localStorage.clear();
-        dispatch(logout());
-    };
-
     return (
-        <div>
+        <Router>
             {!user ? (
-                <div>
-                    <h2>Login to application</h2>
-                    <Notification />
-                    <LoginForm notificationRef={notificationRef} />
-                </div>
+                <Routes>
+                    <Route path="/" element={<LoginPage notificationRef={notificationRef} />} />
+                </Routes>
             ) : (
-                <div>
-                    <h2>blogs</h2>
-                    <Notification />
-                    <p>
-                        {user.name} logged in <button onClick={handleLogOut}>Logout</button>
-                    </p>
-                    <Togglable buttonLabel="new blog" ref={blogFormRef}>
-                        <BlogForm user={user} blogFormRef={blogFormRef} notificationRef={notificationRef} />
-                    </Togglable>
-                    <BlogList user={user} notificationRef={notificationRef} />
-                </div>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <BlogPage
+                                user={user}
+                                notificationRef={notificationRef}
+                                blogFormRef={blogFormRef}
+                            />
+                        }
+                    />
+                </Routes>
             )}
-        </div>
+            <Routes>
+                <Route path="/users" element={<UserPage user={user} />} />
+            </Routes>
+        </Router>
     );
 };
 
