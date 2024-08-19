@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setNotification } from '../reducers/notificationReducer';
 import { voteBlog } from '../reducers/blogReducer';
 import Header from './Header';
+import BlogComments from './BlogComments';
 
 const BlogView = ({ notificationRef }) => {
     const blogId = useParams().id;
@@ -33,6 +34,7 @@ const BlogView = ({ notificationRef }) => {
                 </div>
                 <p>added by {blog.user.name}</p>
             </div>
+            <BlogComments blog={blog} notificationRef={notificationRef} />
         </div>
     );
 };
