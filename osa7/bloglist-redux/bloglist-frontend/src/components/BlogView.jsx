@@ -5,6 +5,7 @@ import { setNotification } from '../reducers/notificationReducer';
 import { voteBlog } from '../reducers/blogReducer';
 import Header from './Header';
 import BlogComments from './BlogComments';
+import { Button } from 'react-bootstrap';
 
 const BlogView = ({ notificationRef }) => {
     const blogId = useParams().id;
@@ -30,7 +31,10 @@ const BlogView = ({ notificationRef }) => {
             <div className="blog-content">
                 <a href={blog.url}>{blog.url}</a>
                 <div className="blog-likes">
-                    <p>likes {blog.likes}</p> <button onClick={() => handleLikeClick(blog)}>like</button>
+                    <p>likes {blog.likes}</p>{' '}
+                    <Button variant="success" onClick={() => handleLikeClick(blog)}>
+                        like
+                    </Button>
                 </div>
                 <p>added by {blog.user.name}</p>
             </div>

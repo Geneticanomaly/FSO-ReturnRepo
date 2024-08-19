@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import { createBlog } from '../reducers/blogReducer';
 import { setNotification } from '../reducers/notificationReducer';
 import blogService from '../services/blogs';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 const BlogForm = ({ user, blogFormRef, notificationRef }) => {
     const [formData, setFormData] = useState({
@@ -47,30 +49,43 @@ const BlogForm = ({ user, blogFormRef, notificationRef }) => {
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
-                title:{' '}
-                <input
-                    id="blog-title"
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                />
+            <Form onSubmit={handleSubmit}>
+                <Form.Group>
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control
+                        id="blog-title"
+                        type="text"
+                        name="title"
+                        value={formData.title}
+                        onChange={handleChange}
+                    />
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Author</Form.Label>
+                    <Form.Control
+                        id="blog-author"
+                        type="text"
+                        name="author"
+                        value={formData.author}
+                        onChange={handleChange}
+                    />
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>Url</Form.Label>
+                    <Form.Control
+                        id="blog-url"
+                        type="text"
+                        name="url"
+                        value={formData.url}
+                        onChange={handleChange}
+                    />
+                </Form.Group>
                 <br />
-                author:{' '}
-                <input
-                    id="blog-author"
-                    type="text"
-                    name="author"
-                    value={formData.author}
-                    onChange={handleChange}
-                />
-                <br />
-                url:{' '}
-                <input id="blog-url" type="text" name="url" value={formData.url} onChange={handleChange} />
-                <br />
-                <input id="blog-create" type="submit" value="create" />
-            </form>
+                <Button variant="primary" type="submit" id="blog-create">
+                    Create
+                </Button>
+            </Form>
+            <br />
         </div>
     );
 };

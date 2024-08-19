@@ -5,6 +5,7 @@ import { voteBlog, deleteBlog } from '../reducers/blogReducer';
 import { setNotification } from '../reducers/notificationReducer';
 import blogService from '../services/blogs';
 import { Link } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
 const Blog = ({ blog, notificationRef }) => {
     const user = useSelector((state) => {
@@ -15,10 +16,13 @@ const Blog = ({ blog, notificationRef }) => {
 
     const blogStyle = {
         paddingTop: 10,
+        paddingBottom: 10,
         paddingLeft: 2,
         border: 'solid',
         borderWidth: 1,
         marginBottom: 5,
+        maxwidth: '100%',
+        overflowWrap: 'break-word',
     };
 
     const handleClick = () => {
@@ -50,20 +54,28 @@ const Blog = ({ blog, notificationRef }) => {
     return (
         <div style={blogStyle}>
             <div className="blog-title">
-                <Link to={`/blogs/${blog.id}`}>
-                    {blog.title} {blog.author}
-                </Link>
-                <button onClick={handleClick}>{!isVisible ? 'view' : 'hide'}</button>
+                <div className="blog-card">
+                    <Link to={`/blogs/${blog.id}`}>
+                        {blog.title} {blog.author}
+                    </Link>
+                    <Button variant="secondary" onClick={handleClick}>
+                        {!isVisible ? 'view' : 'hide'}
+                    </Button>
+                </div>
                 {isVisible && (
                     <div className="blog-content">
                         <p>{blog.url}</p>
                         <div className="blog-likes">
                             <p>likes {blog.likes}</p>{' '}
-                            <button onClick={() => handleLikeClick(blog)}>like</button>
+                            <Button variant="success" onClick={() => handleLikeClick(blog)}>
+                                like
+                            </Button>
                         </div>
                         <p>{blog.user.name}</p>
                         {user.username === blog.user.username && (
-                            <button onClick={() => handleDelete(blog)}>remove</button>
+                            <Button variant="danger" onClick={() => handleDelete(blog)}>
+                                remove
+                            </Button>
                         )}
                     </div>
                 )}

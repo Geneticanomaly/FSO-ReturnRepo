@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import userService from '../services/users';
 import Header from './Header';
+import ListGroup from 'react-bootstrap/ListGroup';
 
 const UserView = () => {
     const userId = useParams().id;
@@ -23,12 +24,12 @@ const UserView = () => {
         <div>
             <Header />
             <h2>{viewedUser.name}</h2>
-            <b>added blogs</b>
-            <ul>
+            <b>Added blogs</b>
+            <ListGroup>
                 {viewedUser.blogs.map((blog) => (
-                    <li key={blog.id}>{blog.title}</li>
+                    <ListGroup.Item key={blog.id}>{blog.title}</ListGroup.Item>
                 ))}
-            </ul>
+            </ListGroup>
         </div>
     );
 };

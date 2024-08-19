@@ -2,6 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import userService from '../services/users';
 import { Link } from 'react-router-dom';
+import Table from 'react-bootstrap/Table';
 
 const UserList = () => {
     const [users, setUsers] = useState([]);
@@ -17,7 +18,7 @@ const UserList = () => {
     return (
         <div>
             <h2>Users</h2>
-            <table>
+            <Table striped>
                 <thead>
                     <tr>
                         <td>Users</td>
@@ -35,7 +36,7 @@ const UserList = () => {
                         </tr>
                     ))}
                 </tbody>
-            </table>
+            </Table>
         </div>
     );
 };
