@@ -1,15 +1,8 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
+import BirthYearForm from './BirthYearForm';
+import { ALL_AUTHORS } from '../queries';
 
 const Authors = () => {
-    const ALL_AUTHORS = gql`
-        query {
-            allAuthors {
-                name
-                born
-                bookCount
-            }
-        }
-    `;
     const result = useQuery(ALL_AUTHORS);
 
     if (result.loading) {
@@ -37,6 +30,7 @@ const Authors = () => {
                     ))}
                 </tbody>
             </table>
+            <BirthYearForm />
         </div>
     );
 };
