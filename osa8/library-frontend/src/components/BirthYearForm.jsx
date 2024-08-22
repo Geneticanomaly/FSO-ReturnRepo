@@ -9,6 +9,9 @@ const BirthYearForm = ({ authors }) => {
 
     const [editAuthor] = useMutation(EDIT_AUTHOR, {
         refetchQueries: [{ query: ALL_AUTHORS }],
+        onError: (error) => {
+            console.log(error.graphQLErrors[0].message);
+        },
     });
 
     const options = authors.map((author) => ({
