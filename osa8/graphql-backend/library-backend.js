@@ -86,7 +86,7 @@ const resolvers = {
             return books.length;
         },
         allBooks: async (root, args) => {
-            let books = await Book.find({});
+            let books = await Book.find({}).populate('author');
 
             if (args.author) {
                 books = books.filter((book) => book.author === args.author);
@@ -94,6 +94,7 @@ const resolvers = {
             if (args.genre) {
                 books = books.filter((book) => book.genres.includes(args.genre));
             }
+
             return books;
         },
         authorCount: async () => {
