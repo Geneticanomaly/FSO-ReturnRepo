@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { ALL_BOOKS } from '../queries';
 import FilterBooks from './FilterBooks';
+import BookTable from './BookTable';
 
 const Books = () => {
     const [books, setBooks] = useState([]);
@@ -32,22 +33,10 @@ const Books = () => {
     return (
         <div>
             <h2>books</h2>
-            <table>
-                <tbody>
-                    <tr>
-                        <th>title</th>
-                        <th>author</th>
-                        <th>published</th>
-                    </tr>
-                    {books.map((a) => (
-                        <tr key={a.title}>
-                            <td>{a.title}</td>
-                            <td>{a.author.name}</td>
-                            <td>{a.published}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <p>
+                in genre <b>patterns</b>
+            </p>
+            <BookTable books={books} />
             <FilterBooks
                 uniqueGenres={uniqueGenres}
                 handleGenreClick={handleGenreClick}

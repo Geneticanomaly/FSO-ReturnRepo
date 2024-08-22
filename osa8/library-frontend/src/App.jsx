@@ -5,6 +5,7 @@ import Books from './components/Books';
 import NewBook from './components/NewBook';
 import AppBar from './components/AppBar';
 import LoginForm from './components/LoginForm';
+import RecommendedBooks from './components/RecommendedBooks';
 
 const App = () => {
     const [token, setToken] = useState(() => {
@@ -25,6 +26,9 @@ const App = () => {
             </Routes>
             <Routes>
                 <Route path="/login" element={<LoginForm setToken={setToken} />} />
+            </Routes>
+            <Routes>
+                <Route path="/recommended" element={<RecommendedBooks />} />
             </Routes>
         </Router>
     );

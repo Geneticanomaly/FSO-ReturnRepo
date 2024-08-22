@@ -13,7 +13,12 @@ const AppBar = ({ token, setToken }) => {
         <div>
             <button onClick={() => navigate('/')}>authors</button>
             <button onClick={() => navigate('/books')}>books</button>
-            {token && <button onClick={() => navigate('/addBook')}>add book</button>}
+            {token && (
+                <>
+                    <button onClick={() => navigate('/addBook')}>add book</button>
+                    <button onClick={() => navigate('/recommended')}>recommended</button>
+                </>
+            )}
             {!token ? (
                 <button onClick={() => navigate('/login')}>login</button>
             ) : (
