@@ -4,6 +4,7 @@ const { v1: uuid } = require('uuid');
 const mongoose = require('mongoose');
 const Book = require('./models/Book');
 const Author = require('./models/Author');
+const { GraphQLError } = require('graphql');
 require('dotenv').config();
 
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -88,7 +89,17 @@ const resolvers = {
 
             if (!author) {
                 author = new Author({ name: args.author });
-                await author.save();
+                try {
+                    await author.save();
+                } catch (error) {
+                    throw new GraphQLError('Saving author failed', {
+                        extensions: {
+                            code: 'BAD_USER_INPUT',
+                            invalidArgs: args.name,
+                            error,
+                        },
+                    });
+                }
             }
 
             const book = new Book({
@@ -97,8 +108,20 @@ const resolvers = {
                 author: author._id,
                 genres: args.genres,
             });
-            await book.save();
-            return book.populate('author');
+
+            try {
+                await book.save();
+            } catch (error) {
+                throw new GraphQLError('Saving book failed', {
+                    extensions: {
+                        code: 'BAD_USER_INPUT',
+                        invalidArgs: args.name,
+                        error,
+                    },
+                });
+            }
+
+            return book;
         },
         editAuthor: async (root, args) => {
             const updatedData = {
