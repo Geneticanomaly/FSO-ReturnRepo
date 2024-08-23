@@ -1,42 +1,46 @@
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@apollo/client';
 import { ALL_BOOKS } from '../queries';
 import FilterBooks from './FilterBooks';
 import BookTable from './BookTable';
 
 const Books = () => {
-    const [books, setBooks] = useState([]);
-    const result = useQuery(ALL_BOOKS);
+    const [selectedGenre, setSelectedGenre] = useState(null);
+    const { data: allBooksData } = useQuery(ALL_BOOKS);
+    const { data, loading } = useQuery(ALL_BOOKS, {
+        variables: { genre: selectedGenre },
+    });
 
-    useEffect(() => {
-        if (result.data && books.length === 0) {
-            setBooks(result.data.allBooks);
+    const uniqueGenres = useMemo(() => {
+        if (allBooksData) {
+            const allGenres = allBooksData.allBooks.flatMap((book) => book.genres);
+            const uniqueGenres = allGenres.filter((genre, index) => allGenres.indexOf(genre) === index);
+            return uniqueGenres;
         }
-    }, [result.data, books.length]);
+        return [];
+    }, [allBooksData]);
 
-    if (result.loading) {
+    if (loading) {
         return <div>Loading...</div>;
     }
 
-    const allGenres = result.data.allBooks.flatMap((book) => book.genres);
-    const uniqueGenres = allGenres.filter((genre, index) => allGenres.indexOf(genre) === index);
+    const allBooks = data.allBooks;
 
     const handleGenreClick = (genre) => {
-        const filteredBooks = result.data.allBooks.filter((book) => book.genres.includes(genre));
-        setBooks(filteredBooks);
+        setSelectedGenre(genre);
     };
 
     const handleNoFilterClick = () => {
-        setBooks(result.data.allBooks);
+        setSelectedGenre(null);
     };
 
     return (
         <div>
             <h2>books</h2>
             <p>
-                in genre <b>patterns</b>
+                in genre <b>{selectedGenre || 'all'}</b>
             </p>
-            <BookTable books={books} />
+            <BookTable books={allBooks} />
             <FilterBooks
                 uniqueGenres={uniqueGenres}
                 handleGenreClick={handleGenreClick}
