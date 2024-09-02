@@ -4,3 +4,6 @@
 [submodule "osa8"]
 	path = osa8
 	url = https://github.com/Geneticanomaly/FSO-GraphQL.git
+[submodule "osa9"]
+	path = osa9
+	url = https://github.com/Geneticanomaly/FSO-TypeScript.git
