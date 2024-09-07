@@ -1,11 +1,11 @@
-[submodule "osa3"]
-	path = osa3
+[submodule "osa03"]
+	path = osa03
 	url = https://github.com/Geneticanomaly/FSO-Osa-3.git
-[submodule "osa8"]
-	path = osa8
+[submodule "osa08"]
+	path = osa08
 	url = https://github.com/Geneticanomaly/FSO-GraphQL.git
-[submodule "osa9"]
-	path = osa9
+[submodule "osa09"]
+	path = osa09
 	url = https://github.com/Geneticanomaly/FSO-TypeScript.git
 [submodule "osa10"]
 	path = osa10
