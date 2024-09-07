@@ -7,3 +7,6 @@
 [submodule "osa9"]
 	path = osa9
 	url = https://github.com/Geneticanomaly/FSO-TypeScript.git
+[submodule "osa10"]
+	path = osa10
+	url = https://github.com/Geneticanomaly/FSO-ReactNative.git
