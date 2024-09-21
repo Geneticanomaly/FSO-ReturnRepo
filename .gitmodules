@@ -10,3 +10,6 @@
 [submodule "osa10"]
 	path = osa10
 	url = https://github.com/Geneticanomaly/FSO-ReactNative.git
+[submodule "osa11"]
+	path = osa11
+	url = https://github.com/Geneticanomaly/full-stack-open-pokedex.git
